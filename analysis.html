@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Analysis | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="topbar-analysis">
+                 <a href="main.html" class="topbar-logo-analysis">
+                    <img src="image001.png" alt="SABC Logo" onerror="this.style.display='none'"/>
+                    <div class="topbar-logo-text-analysis">
+                     SABC
+                    <span>Analysis</span>
+                    </div>
+                </a>
+                <div class="topbar-divider-analysis"></div>
+                <div class="topbar-spacer-analysis"></div>
+                <nav class="topbar-nav-analysis">
+                    <a href="Usines.html" class="topbar-nav-link-analysis">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                         <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Usines</span>
+                    </a>
+                    <a href="gmao.html" class="topbar-nav-link-analysis active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="M7 16v-4"/>
+                            <path d="M12 16V8"/>
+                            <path d="M17 16v-7"/>
+                        </svg>
+                        <span>GMAO</span>
+                    </a>
+
+                </nav>
+            </header>
+                    <div class="AMDEC">
+                    <!-- ========================= -->
+                    <!-- AMDEC HEADER -->
+                    <!-- ========================= -->
+
+                    <div class="amdec-header">
+                     <div class="amdec-title-group">
+                        <h1>AMDEC</h1>
+                        <p>Analyse des modes de défaillance,de leurs effets et de leurs criticités</p>
+                     </div>
+                    </div>
+                    <!-- ========================= -->
+                    <!-- AMDEC LEGEND -->
+                    <!-- ========================= -->
+                    <div class="amdec-legend">
+                     <!-- LOW -->
+                     <div class="legend-card low">
+                        <div class="legend-color"></div>
+                            <div class="legend-content">
+                                <h3>Low Risk</h3>
+                                <p>Criticality : 1 → 20</p>
+                                <small>Routine inspection required</small>
+                            </div>
+                        </div>
+                        <!-- MEDIUM -->
+                        <div class="legend-card medium">
+                         <div class="legend-color"></div>
+                            <div class="legend-content">
+                                <h3>Medium Risk</h3>
+                                <p>Criticality : 21 → 50</p>
+                                <small>Preventive maintenance recommended</small>
+                            </div>
+                        </div>
+                        <!-- HIGH -->
+                        <div class="legend-card high">
+                         <div class="legend-color"></div>
+                            <div class="legend-content">
+                                <h3>High Risk</h3>
+                                <p>Criticality : 51 → 80</p>
+                                <small>Conditional maintenance required</small>
+                            </div>
+                        </div>
+                        <!-- CRITICAL -->
+                        <div class="legend-card critical">
+                         <div class="legend-color"></div>
+                            <div class="legend-content">
+                                <h3>Critical Risk</h3>
+                                <p>Criticality : 81 → 125</p>
+                                <small>Immediate corrective action required</small>
+                            </div>
+                        </div>
+                            </div>
+                            <!-- ========================= -->
+                            <!-- AMDEC TABLE -->
+                            <!-- ========================= -->
+                            <div class="amdec-table-container">
+                            <table class="amdec-table">
+                            <thead>
+                            <tr>
+                    <th>Element</th>
+
+                    <th>Failure Mode</th>
+
+                    <th>Causes</th>
+
+                    <th>Effects</th>
+
+                    <th>Frequency</th>
+
+                    <th>Gravity</th>
+
+                    <th>Detection</th>
+
+                    <th>Criticality</th>
+
+                    <th>Intervention Type</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="amdec-body">
+
+                <!-- ========================= -->
+                <!-- ROW -->
+                <!-- ========================= -->
+
+                <tr class="amdec-row">
+
+                    <!-- ELEMENT -->
+
+                    <td>
+
+                        <div class="element-group">
+
+                            <input
+                                type="text"
+                                placeholder="Motor"
+                                class="table-input element-name"
+                            >
+
+                            <input
+                                type="text"
+                                placeholder="ID : MTR-001"
+                                class="table-input element-id"
+                            >
+
+                        </div>
+
+                    </td>
+
+                    <!-- FAILURE MODE -->
+
+                    <td>
+
+                        <textarea
+                            class="table-textarea"
+                            placeholder="Bearing wear"
+                        ></textarea>
+
+                    </td>
+
+                    <!-- CAUSES -->
+
+                    <td>
+
+                        <textarea
+                            class="table-textarea"
+                            placeholder="Poor lubrication"
+                        ></textarea>
+
+                    </td>
+
+                    <!-- EFFECTS -->
+
+                    <td>
+
+                        <textarea
+                            class="table-textarea"
+                            placeholder="Machine overheating"
+                        ></textarea>
+
+                    </td>
+
+                    <!-- FREQUENCY -->
+
+                    <td>
+
+                        <select class="risk-select frequency">
+
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+
+                        </select>
+
+                    </td>
+
+                    <!-- GRAVITY -->
+
+                    <td>
+
+                        <select class="risk-select gravity">
+
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+
+                        </select>
+
+                    </td>
+
+                    <!-- DETECTION -->
+
+                    <td>
+
+                        <select class="risk-select detection">
+
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+
+                        </select>
+
+                    </td>
+
+                    <!-- CRITICALITY -->
+
+                    <td>
+
+                        <div class="criticality-box low-risk">
+
+                            <span class="criticality-value">
+                                1
+                            </span>
+
+                            <small class="criticality-level">
+                                LOW
+                            </small>
+
+                        </div>
+
+                    </td>
+
+                    <!-- INTERVENTION -->
+
+                    <td>
+
+                        <div class="intervention-box intervention-low">
+
+                            Routine Inspection
+
+                        </div>
+
+                    </td>
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <button class="delete-row-btn">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- AMDEC ACTIONS -->
+    <!-- ========================= -->
+
+    <div class="amdec-actions">
+
+        <button class="add-element-btn">
+
+            Add Element
+
+        </button>
+
+        <button class="export-pdf-btn">
+
+            Export PDF
+
+        </button>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- ADD ELEMENT MODAL -->
+    <!-- ========================= -->
+
+    <div id="add-element-modal" class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>Add New Element</h2>
+
+                <button class="modal-close-btn">&times;</button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="modal-form-group">
+
+                    <label>Element Name</label>
+
+                    <input type="text" id="element-name" placeholder="e.g., Motor">
+
+                </div>
+
+                <div class="modal-form-group">
+
+                    <label>Failure Mode</label>
+
+                    <textarea id="failure-mode" placeholder="e.g., Bearing wear" rows="2"></textarea>
+
+                </div>
+
+                <div class="modal-form-group">
+
+                    <label>Causes (one per line)</label>
+
+                    <textarea id="causes" placeholder="Line 1: Poor lubrication&#10;Line 2: Overheating" rows="3"></textarea>
+
+                </div>
+
+                <div class="modal-form-group">
+
+                    <label>Effects (one per line)</label>
+
+                    <textarea id="effects" placeholder="Line 1: Machine overheating&#10;Line 2: Noise increase" rows="3"></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="modal-cancel-btn">Cancel</button>
+
+                <button class="modal-confirm-btn">Add Element</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+        <script src="supabase-config.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+        <script src="analysis.js"></script>
+    </body>
+</html>

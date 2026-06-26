@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Profil | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <div class="logo-bar-profile">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-profile"/>
+            </div>
+            <div class="profile-card">
+                    <!-- En-tête profil -->
+                    <div class="profile-header">
+                        <div class="profile-avatar-lg" id="profileAvatarBtn" title="Change picture">
+                            <img src="" alt="" id="profileAvatarImg"/>
+                            <span class="profile-avatar-initials" id="profileInitials">AD</span>
+                                <div class="profile-avatar-edit-overlay">
+                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                 <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                 <circle cx="12" cy="13" r="4"/>
+                                 </svg>
+                                </div>
+                            <input type="file" id="avatarUploadInput" accept="image/*"/>
+                        </div>
+                        <div class="profile-user-info">
+                            <div class="profile-user-name" id="profileUserName">Administrator</div>
+                            <div class="profile-user-role" id="profileUserRole">Admin — SABC GMAO</div>
+                        </div>
+                    </div>
+                    <!-- Section : Informations personnelles -->
+                    <div class="profile-section">
+                        <div class="profile-section-label">Informations</div>
+                         <div class="profile-item" id="toggleEditInfo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        Modify my informations
+                         </div>
+                <!-- Sous-formulaire (caché par défaut) -->
+                        <div class="profile-sub" id="subEditInfo">
+                         <div class="profile-field">
+                            <label>Full Name</label>
+                            <input type="text" id="fieldNom" placeholder="Ex: Jean Dupont"/>
+                         </div>
+                         <div class="profile-field">
+                            <label>Email</label>
+                            <input type="email" id="fieldEmail" placeholder="example@sabc.cm"/>
+                         </div>
+                         <div class="profile-field">
+                             <label>Phone Number</label>
+                             <input type="tel" id="fieldTel" placeholder="+237 6XX XXX XXX"/>
+                         </div>
+                         <button class="profile-save-btn" id="saveInfoBtn">Save Changes</button>
+                        </div>
+                    </div>
+              <!-- Section : Sécurité -->
+            <div class="profile-section">
+                <div class="profile-section-label">Security</div>
+                <div class="profile-item" id="toggleChangePw">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0110 0v4"/>
+                  </svg>
+                    Change Password
+                </div>
+                <div class="profile-sub" id="subChangePw">
+                 <div class="profile-field">
+                    <label>Current Password</label>
+                    <input type="password" id="fieldPwOld" placeholder="••••••••"/>
+                 </div>
+                 <div class="profile-field">
+                 <label>New Password</label>
+                 <input type="password" id="fieldPwNew" placeholder="••••••••"/>
+                 </div>
+                 <div class="profile-field">
+                    <label>Confirm Password</label>
+                    <input type="password" id="fieldPwConfirm" placeholder="••••••••"/>
+                 </div>
+                 <button class="profile-save-btn" id="savePwBtn">Update Password</button>
+                </div>
+            </div>
+
+            <!-- Section : Actions -->
+            <div class="profile-section">
+                <a href="main.html" class="profile-item danger">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                 <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                 <polyline points="16 17 21 12 16 7"/>
+                 <line x1="21" y1="12" x2="9" y2="12"/>
+                 </svg>
+                    Disconnect
+                </a>
+            </div>
+            </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="profile.js"></script>
+    </body>
+</html>

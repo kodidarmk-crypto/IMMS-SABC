@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Stock Managements | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="topbar-management">
+                 <a href="main.html" class="topbar-logo-management">
+                    <img src="image001.png" alt="SABC Logo" onerror="this.style.display='none'"/>
+                    <div class="topbar-logo-text-management">
+                     SABC
+                    <span>Stocks</span>
+                    </div>
+                </a>
+                <div class="topbar-divider-management"></div>
+                <div class="topbar-spacer-management"></div>
+                <nav class="topbar-nav-management">
+                    <a href="Usines.html" class="topbar-nav-link-management">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+                            <line x1="2" y1="11" x2="22" y2="11"/>
+                        </svg>
+                        <span>Usines</span>
+                    </a>
+                    <a href="gmao.html" class="topbar-nav-link-management active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="M7 16v-4"/>
+                            <path d="M12 16V8"/>
+                            <path d="M17 16v-7"/>
+                        </svg>
+                        <span>GMAO</span>
+                    </a>
+
+                </nav>
+            </header>
+            <div class="management-content">
+
+    <!-- ========================= -->
+    <!-- LEFT SIDE -->
+    <!-- ========================= -->
+
+    <div class="management-left">
+
+        <!-- ========================= -->
+        <!-- INVENTORY TABLE -->
+        <!-- ========================= -->
+
+        <div class="inventory-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Inventory Management
+                    </h2>
+
+                    <p>
+                        Industrial spare parts inventory
+                    </p>
+
+                </div>
+
+                <div class="inventory-controls">
+
+                    <select id="sort-by-category" class="sort-select">
+                        <option value="all">All categories</option>
+                        <option value="Mechanical">Mechanical</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Hydraulic">Hydraulic</option>
+                        <option value="Pneumatic">Pneumatic</option>
+                        <option value="Software">Software</option>
+                        <option value="Safety">Safety</option>
+                    </select>
+                    <select id="sort-by-stock-status" class="sort-select">
+                        <option value="all">All status</option>
+                        <option value="normal">Normal</option>
+                        <option value="critical">Critical</option>
+                        <option value="out">Out</option>
+                    </select>
+
+                    <button
+                        class="export-stock-btn"
+                        id="export-stock-btn"
+                    >
+
+                        Export PDF
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="inventory-table-container">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Part</th>
+
+                            <th>Reference</th>
+
+                            <th>Category</th>
+
+                            <th>Quantity</th>
+
+                            <th>Min Stock</th>
+
+                            <th>Location</th>
+
+                            <th>Price</th>
+
+                            <th>Status</th>
+
+                            <th>Control</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="inventory-table-body"
+                    ></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- ADD PART -->
+        <!-- ========================= -->
+
+        <div class="add-part-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Add Part
+                    </h2>
+
+                    <p>
+                        Register a new spare part
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form
+                class="add-part-form"
+                id="add-part-form"
+            >
+
+                <!-- PART NAME -->
+
+                <div class="field-group-stock">
+
+                    <label for="partName">
+
+                        Part Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partName"
+                        placeholder="Bearing 6204"
+                    >
+
+                </div>
+
+                <!-- REFERENCE -->
+
+                <div class="field-group-stock">
+
+                    <label for="partReference">
+
+                        Reference
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partReference"
+                        placeholder="BR-6204"
+                    >
+
+                </div>
+
+                <!-- CATEGORY -->
+
+                <div class="field-group-stock">
+
+                    <label for="partCategory">
+
+                        Category
+
+                    </label>
+
+                    <select id="partCategory">
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+                        <option value="Mechanical">
+                            Mechanical
+                        </option>
+
+                        <option value="Electrical">
+                            Electrical
+                        </option>
+
+                        <option value="Hydraulic">
+                            Hydraulic
+                        </option>
+
+                        <option value="Pneumatic">
+                            Pneumatic
+                        </option>
+
+                        <option value="Software">
+                            Software
+                        </option>
+
+                        <option value="Safety">
+                            Safety
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- QUANTITY -->
+
+                <div class="double-fields-stock">
+
+                    <div class="field-group-stock">
+
+                        <label for="partQuantity">
+
+                            Quantity
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="partQuantity"
+                            placeholder="15"
+                        >
+
+                    </div>
+
+                    <div class="field-group-stock">
+
+                        <label for="partMinStock">
+
+                            Min Stock
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="partMinStock"
+                            placeholder="5"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- LOCATION -->
+
+                <div class="field-group-stock">
+
+                    <label for="partLocation">
+
+                        Location
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partLocation"
+                        placeholder="Warehouse A"
+                    >
+
+                </div>
+
+                <!-- UNIT PRICE -->
+
+                <div class="field-group-stock">
+
+                    <label for="partPrice">
+
+                        Unit Price
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="partPrice"
+                        placeholder="12"
+                    >
+
+                </div>
+
+                <!-- SUPPLIER -->
+
+                <div class="field-group-stock">
+
+                    <label for="partSupplier">
+
+                        Supplier
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partSupplier"
+                        placeholder="SKF"
+                    >
+
+                </div>
+
+                <!-- MACHINE -->
+
+                <div class="field-group-stock">
+
+                    <label for="partMachine">
+
+                        Linked Machine
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="partMachine"
+                        placeholder="MCH-001"
+                    >
+
+                </div>
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="save-part-btn"
+                >
+
+                    Save Part
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- RIGHT SIDE -->
+    <!-- ========================= -->
+
+    <div class="management-right">
+
+        <!-- ========================= -->
+        <!-- KPI -->
+        <!-- ========================= -->
+
+        <div class="stock-kpi-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Inventory KPI
+                    </h2>
+
+                    <p>
+                        Automatic inventory calculations
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="stock-kpi-grid"
+                id="stock-kpi-grid"
+            ></div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- LOW STOCK -->
+        <!-- ========================= -->
+
+        <div class="low-stock-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Low Stock Alerts
+                    </h2>
+
+                    <p>
+                        Critical inventory alerts
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="low-stock-list"
+                id="low-stock-list"
+            ></div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- CATEGORY DISTRIBUTION -->
+        <!-- ========================= -->
+
+        <div class="category-distribution-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Categories
+                    </h2>
+
+                    <p>
+                        Inventory category distribution
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="category-list"
+                id="category-list"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+        <script src="supabase-config.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+        <script src="management.js"></script>
+    </body>
+</html>

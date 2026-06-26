@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="320" viewBox="0 0 420 320" role="img" aria-labelledby="title">
+  <title id="title">Add intervention illustration</title>
+  <rect width="420" height="320" rx="28" fill="#f6f9f7"/>
+  <circle cx="178" cy="154" r="72" fill="#fff" stroke="#d9e7de" stroke-width="4"/>
+  <path d="M178 98v56l38 26" fill="none" stroke="#1f6f5b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M270 102l30-30M292 72l28 28" stroke="#f39c12" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="298" cy="224" r="38" fill="#27ae60"/>
+  <path d="M280 224h36M298 206v36" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+</svg>

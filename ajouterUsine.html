@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"> 
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Factory | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper"> 
+            <div class="logo-bar-addUsine">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-addUsine" />
+            </div>
+
+            <div class="add-usine-card">
+                <div class="add-usine-header">
+                    <h1>Add a Factory</h1>
+                    <p>Fill in the Factory informations.</p>
+                </div>
+                <form class="add-usine-form">
+                <div class="form-grid-addUsine">
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">Factory Name</label>
+                        <input type="text" id="usineNom" placeholder="Ex: Usine Koumassi" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">City</label>
+                        <input type="text" id="usineVille" placeholder="Ex: Douala" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">Responsable</label>
+                        <input type="text" id="usineResponsable" placeholder="Ex: Jean Mbappe" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">Sector</label>
+                        <input type="text" id="usineSecteur" placeholder="Ex: Food Factory" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">Creation Date</label>
+                        <input type="date" id="usineDate" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addUsine">
+                        <label style="font-weight: 600; color: #2c3e50;">Factory Image</label>
+                        <div style="position: relative; border: 2px dashed #3498db; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;" id="imageDropZone">
+                            <input type="file" id="usineImage" accept="image/*" style="display: none;">
+                            <span style="color: #3498db; font-weight: 500;" id="imageLabel">Click to upload or drag and drop</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="create-usine-btn" style="background-color: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">
+                    Add Factory
+                </button>
+                </form>
+            </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="ajouterUsine.js"></script>
+    </body>
+</html>

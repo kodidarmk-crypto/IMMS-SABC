@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"> 
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Production line | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <d class="page-wrapper"> 
+            <div class="logo-bar-addChaine">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-addChaine" />
+            </div>
+                <div class="add-chaine-card">
+                 <div class="add-chaine-header">
+                  <h1>Add a Production line</h1>
+                  <p>Fill in the information for the production line.</p>
+                 </div>
+                 <form class="add-chaine-form">
+                 <div class="form-grid-addChaine">
+                    <div class="form-group-addChaine">
+                     <label style="font-weight: 600; color: #2c3e50;">Production line name</label>
+                     <input type="text" id="chaineNom" placeholder="Ex: Line 12" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addChaine">
+                        <label style="font-weight: 600; color: #2c3e50;">Factory</label>
+                        <select id="chaineUsine" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            <option value="">Select a factory</option>
+                        </select>
+                    </div>
+                    <div class="form-group-addChaine">
+                        <label style="font-weight: 600; color: #2c3e50;">Responsable</label>
+                        <input type="text" id="chaineResponsable" placeholder="Ex: Paul Ndzi" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                    </div>
+                    <div class="form-group-addChaine">
+                     <label style="font-weight: 600; color: #2c3e50;">Status</label>
+                     <select id="chaineStatus" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        <option value="">Select a status</option>
+                        <option value="Active" style="background-color: #d5f4e6; color: #27ae60;">Active</option>
+                        <option value="Maintenance" style="background-color: #fef5e7; color: #f39c12;">Maintenance</option>
+                        <option value="Inactive" style="background-color: #fadbd8; color: #e74c3c;">Inactive</option>
+                     </select>
+                    </div>
+
+                 </div>
+                 <button type="submit" class="create-chaine-btn" style="background-color: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">Add Production line</button>
+                 </form>
+                </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="ajouterChaine.js"></script>
+    </body>
+</html>

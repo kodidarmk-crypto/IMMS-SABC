@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Failures and downtime | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="topbar-pannes">
+                 <a href="main.html" class="topbar-logo-pannes">
+                    <img src="image001.png" alt="SABC Logo" onerror="this.style.display='none'"/>
+                    <div class="topbar-logo-text-pannes">
+                     SABC
+                    <span>Failures and downtime</span>
+                    </div>
+                </a>
+                <div class="topbar-divider-pannes"></div>
+                <div class="topbar-spacer-pannes"></div>
+                <nav class="topbar-nav-pannes">
+                    <a href="Usines.html" class="topbar-nav-link-pannes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+                            <line x1="2" y1="11" x2="22" y2="11"/>
+                        </svg>
+                        <span>Usines</span>
+                    </a>
+                    <a href="gmao.html" class="topbar-nav-link-pannes active" id="btnContact">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="M7 16v-4"/>
+                            <path d="M12 16V8"/>
+                            <path d="M17 16v-7"/>
+                        </svg>
+                        <span>GMAO</span>
+                    </a>
+
+                </nav>
+            </header>
+            <div class="pannes-content">
+
+    <!-- ========================= -->
+    <!-- LEFT SIDE -->
+    <!-- ========================= -->
+
+    <div class="pannes-left">
+
+        <!-- ========================= -->
+        <!-- FAILURE HISTORY -->
+        <!-- ========================= -->
+
+        <div class="pannes-history-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Failure History
+                    </h2>
+
+                    <p>
+                        Complete machine failure records
+                    </p>
+
+                </div>
+
+                <div class="failure-controls">
+
+                    <select id="sort-failures" class="sort-select">
+                        <option value="all">All failures</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="unresolved">Unresolved</option>
+                        <option value="date">Date</option>
+                        <option value="component">Component</option>
+                        <option value="type">Type</option>
+                    </select>
+
+                    <button class="export-history-btn" id="export-history-btn">Export PDF</button>
+
+                </div>
+
+            </div>
+
+            <div class="pannes-table-container">
+
+                <table class="pannes-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Date</th>
+
+                            <th>Component</th>
+
+                            <th>Type</th>
+
+                            <th>Description</th>
+
+                            <th>Duration</th>
+
+                            <th>Method</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="pannes-table-body"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- ADD FAILURE -->
+        <!-- ========================= -->
+
+        <div class="add-failure-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Add Failure
+                    </h2>
+
+                    <p>
+                        Register a new machine failure
+                    </p>
+
+                </div>
+
+            </div>
+
+            <form
+                class="add-failure-form"
+                id="add-failure-form"
+            >
+
+                <!-- DATE -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureDate">
+
+                        Date
+
+                    </label>
+
+                    <input
+                        type="date"
+                        id="failureDate"
+                    >
+
+                </div>
+
+                <!-- COMPONENT -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureComponent">
+
+                        Component
+
+                    </label>
+
+                    <select id="failureComponent">
+
+                        <option value="">
+                            Select Component
+                        </option>
+
+                        <option>
+                            Main Motor
+                        </option>
+
+                        <option>
+                            Hydraulic Pump
+                        </option>
+
+                        <option>
+                            PLC Controller
+                        </option>
+
+                        <option>
+                            Conveyor Belt
+                        </option>
+
+                        <option>
+                            Operator Panel
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- FAILURE TYPE -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureType">
+
+                        Failure Type
+
+                    </label>
+
+                    <select id="failureType">
+
+                        <option value="">
+                            Select Type
+                        </option>
+
+                        <option value="Human">
+                            Human
+                        </option>
+
+                        <option value="Mechanical">
+                            Mechanical
+                        </option>
+
+                        <option value="Electrical">
+                            Electrical
+                        </option>
+
+                        <option value="Hydraulic">
+                            Hydraulic
+                        </option>
+
+                        <option value="Software">
+                            Software
+                        </option>
+
+                        <option value="Pneumatic">
+                            Pneumatic
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- DURATION -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureDuration">
+
+                        Duration (hours)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        id="failureDuration"
+                        placeholder="4.5"
+                    >
+
+                </div>
+
+                <!-- DESCRIPTION -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureDescription">
+
+                        Failure Description
+
+                    </label>
+
+                    <textarea
+                        id="failureDescription"
+                        placeholder="
+Describe the failure...
+                        "
+                    ></textarea>
+
+                </div>
+
+                <!-- METHOD -->
+
+                <div class="field-group-failure">
+
+                    <label for="failureMethod">
+
+                        Resolution Method
+
+                    </label>
+
+                    <textarea
+                        id="failureMethod"
+                        placeholder="
+Describe the repair method...
+                        "
+                    ></textarea>
+
+                </div>
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="save-failure-btn"
+                >
+
+                    Save Failure
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- RIGHT SIDE -->
+    <!-- ========================= -->
+
+    <div class="pannes-right">
+
+        <!-- ========================= -->
+        <!-- KPI -->
+        <!-- ========================= -->
+
+        <div class="maintenance-kpi-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Maintenance KPI
+                    </h2>
+
+                    <p>
+                        Automatic maintenance calculations
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-grid"
+                id="kpi-grid"
+            ></div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- UNRESOLVED FAILURES -->
+        <!-- ========================= -->
+
+        <div class="failures-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Unresolved Failures
+                    </h2>
+
+                    <p>
+                        Failures requiring attention
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="failures-list"
+                id="failures-list"
+            ></div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- FAILURE TYPES -->
+        <!-- ========================= -->
+
+        <div class="failure-types-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Failure Types
+                    </h2>
+
+                    <p>
+                        Failure distribution statistics
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="failure-types-list"
+                id="failure-types-list"
+            ></div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- CRITICAL COMPONENTS -->
+        <!-- ========================= -->
+
+        <div class="critical-components-card">
+
+            <div class="card-header">
+
+                <div class="card-title-group">
+
+                    <h2>
+                        Critical Components
+                    </h2>
+
+                    <p>
+                        Most failure-prone components
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div
+                class="critical-components-list"
+                id="critical-components-list"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+        <script src="supabase-config.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+        <script src="pannes.js"></script>
+    </body>
+</html>

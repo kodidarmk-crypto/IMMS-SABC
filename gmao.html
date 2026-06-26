@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>GMAO | SABC</title>
+        <link rel="icon" type="image/png" href="image001.png"/>
+        <link rel="stylesheet" href="style.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="topbar-gmao">
+                <a href="Usines.html" class="topbar-logo-gmao">
+                    <img src="image001.png" alt="SABC Logo" onerror="this.style.display='none'"/>
+                    <div class="topbar-logo-text-gmao">
+                     SABC
+                    <span>GMAO Platform</span>
+                    </div>
+                </a>
+                <div class="topbar-divider-gmao"></div>
+                <div class="topbar-spacer-gmao"></div>
+                <nav class="topbar-nav-gmao">
+                    <a href="machines.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                         <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Machines</span>
+                    </a>
+                    <a href="member.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                         <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Members</span>
+                    </a>
+                    <a href="interventions.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                         <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Interventions</span>
+                    </a>
+                    <a href="pannes.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 3"/>
+                            <path d="M8 3l-2 2"/>
+                            <path d="M16 3l2 2"/>
+                        </svg>
+                        <span>Failures & Downtime</span>
+                    </a>
+                    <a href="documents.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M8 13h8"/>
+                        <path d="M8 17h5"/>
+                        </svg>
+                        <span>Documents</span>
+                    </a>
+                    <a href="Management.html" class="topbar-nav-link-gmao">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+                            <path d="M3 7v10l9 4 9-4V7"/>
+                            <path d="M12 11v10"/>
+                        </svg>
+                        <span>Inventory Management</span>
+                    </a>
+                    <a href="analysis.html" class="topbar-nav-link-gmao active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="M7 16v-4"/>
+                            <path d="M12 16V8"/>
+                            <path d="M17 16v-7"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+
+                </nav>
+            </header>
+            <div class="gmao-body">
+            <!-- CARD 1 -->
+            <div class="gmao-card machine-overview-card">
+                <div class="machine-overview-image">
+                 <img src="" alt="Machine Image" id="machineImage">
+                </div>
+                <div class="machine-overview-content">
+                    <div class="machine-title-row">
+                        <div><h1 id="machineName"></h1>
+                            <p class="machine-subtitle" id="machineType"></p>
+                        </div>
+                        <span class="machine-status" id="machineStatus"></span>
+                    </div>
+                    <div class="machine-info-grid">
+                        <div class="machine-info">
+                            <span>Factory</span>
+                            <p id="machineFactory"></p>
+                        </div>
+                        <div class="machine-info">
+                            <span>Production Line</span>
+                            <p id="machineLine"></p>
+                        </div>
+                        <div class="machine-info">
+                            <span>Manufacturer</span>
+                            <p id="machineManufacturer"></p>
+                        </div>
+                    </div>
+                    <div class="machine-description">
+                     <h3>Machine Overview</h3>
+                     <p id="machineDescription"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- CARD 2 -->
+            <div class="gmao-card alerts-card">
+                <div class="card-header">
+                    <h2>Alert Pannel</h2>
+                </div>
+                <div class="alert-list"></div>
+            </div>
+            <!-- CARD 3 -->
+            <div class="gmao-card interventions-card">
+                <div class="card-header">
+                    <h2>Weekly Interventions</h2>
+                </div>
+                <div class="interventions-list"></div>
+            </div>
+            <!-- CARD 4 -->
+            <div class="gmao-card team-card">
+                <div class="card-header">
+                    <h2>Machine Team</h2>
+                </div>
+                <div class="team-list"></div>
+            </div>
+            <!-- CARD 5 -->
+             <div class="gmao-card elements-card">
+                <div class="card-header">
+                    <h2>Machine Elements</h2>
+                    <button type="button">Add Elements</button>
+                </div>
+                <div class="elements-list"></div>
+            </div>
+        </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="gmao.js"></script>
+    </body>
+</html>

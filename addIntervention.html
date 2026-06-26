@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Interventions | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+             <div class="logo-bar-addintervention">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-addintervention" />
+            </div>
+            <div class="card-addintervention">
+                <div class="card_addintervention_left">
+                    <img src="add-intervention.svg" alt="Add intervention" />
+                </div>
+                <div class="card_addintervention_right">
+                <!-- ========================= -->
+                <!-- HEADER -->
+                <!-- ========================= -->
+                    <div class="addintervention_header">
+                     <h1> Add Intervention</h1>
+                     <p>Schedule and manage maintenance interventions</p>
+                    </div>
+                    <!-- ========================= -->
+                    <!-- FORM -->
+                    <!-- ========================= -->
+                    <form class="addintervention_form">
+                    <!-- TITLE -->
+                    <div class="field-group-addintervention">
+                     <label for="interventionTitle">Intervention Title</label>
+                     <input type="text" id="interventionTitle" placeholder="Bearing Replacement">
+                     <span class="field-error" id="interventionTitleError"></span>
+                    </div>
+                    <!-- TYPE -->
+                    <div class="field-group-addintervention">
+                        <label for="interventionType">Intervention Type</label>
+                        <select id="interventionType">
+                            <option value="">Select Type</option>
+                            <option value="corrective">Corrective</option>
+                            <option value="preventive">Preventive</option>
+                            <option value="predictive">Predictive</option>
+                            <option value="emergency">Emergency</option>
+                            <option value="inspection">Inspection</option>
+                            <option value="ameliorative">Ameliorative</option>
+                        </select>
+                        <span class="field-error" id="interventionTypeError"></span>
+                    </div>
+                    <!-- PRIORITY -->
+                    <div class="field-group-addintervention">
+                    <label for="interventionPriority">
+                Priority
+            </label>
+
+            <select id="interventionPriority">
+
+                <option value="">
+                    Select Priority
+                </option>
+
+                <option value="low">
+                    Low
+                </option>
+
+                <option value="medium">
+                    Medium
+                </option>
+
+                <option value="high">
+                    High
+                </option>
+
+                <option value="critical">
+                    Critical
+                </option>
+
+            </select>
+
+            <span
+                class="field-error"
+                id="interventionPriorityError"
+            ></span>
+
+        </div>
+
+        <!-- DATE -->
+
+        <div class="double-fields">
+
+            <!-- DATE -->
+
+            <div class="field-group-addintervention">
+
+                <label for="interventionDate">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="interventionDate"
+                >
+
+                <span
+                    class="field-error"
+                    id="interventionDateError"
+                ></span>
+
+            </div>
+
+            <!-- REPEAT -->
+
+            <div class="field-group-addintervention">
+
+                <label for="interventionRepeat">
+                    Repeat
+                </label>
+
+                <select id="interventionRepeat">
+
+                    <option value="none">
+                        None
+                    </option>
+
+                    <option value="weekly">
+                        Weekly
+                    </option>
+
+                    <option value="monthly">
+                        Monthly
+                    </option>
+
+                    <option value="quarterly">
+                        Quarterly
+                    </option>
+
+                    <option value="semiannual">
+                        Semi-Annual
+                    </option>
+
+                    <option value="annual">
+                        Annual
+                    </option>
+
+                </select>
+
+                <span
+                    class="field-error"
+                    id="interventionRepeatError"
+                ></span>
+
+            </div>
+
+        </div>
+
+        <!-- TIMES -->
+
+        <div class="triple-fields">
+
+            <!-- START -->
+
+            <div class="field-group-addintervention">
+
+                <label for="interventionStart">
+                    Start
+                </label>
+
+                <input
+                    type="time"
+                    id="interventionStart"
+                >
+
+                <span
+                    class="field-error"
+                    id="interventionStartError"
+                ></span>
+
+            </div>
+
+            <!-- END -->
+
+            <div class="field-group-addintervention">
+
+                <label for="interventionEnd">
+                    End
+                </label>
+
+                <input
+                    type="time"
+                    id="interventionEnd"
+                >
+
+                <span
+                    class="field-error"
+                    id="interventionEndError"
+                ></span>
+
+            </div>
+
+            <!-- DURATION -->
+
+            <div class="field-group-addintervention">
+
+                <label for="interventionDuration">
+                    Duration
+                </label>
+
+                <input
+                    type="text"
+                    id="interventionDuration"
+                    readonly
+                    placeholder="0h"
+                >
+
+            </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+
+        <div class="field-group-addintervention">
+
+            <label for="interventionDescription">
+                Description
+            </label>
+
+            <textarea
+                id="interventionDescription"
+                placeholder="Describe the intervention..."
+            ></textarea>
+
+            <span
+                class="field-error"
+                id="interventionDescriptionError"
+            ></span>
+
+        </div>
+
+        <!-- MACHINE -->
+
+        <div class="double-fields">
+
+            <!-- MACHINE ID -->
+
+            <div class="field-group-addintervention">
+
+                <label for="machineId">
+                    Machine ID
+                </label>
+
+                <input
+                    type="text"
+                    id="machineId"
+                    placeholder="MCH-001"
+                >
+
+            </div>
+
+            <!-- COMPONENT ID -->
+
+            <div class="field-group-addintervention">
+
+                <label for="componentId">
+                    Component ID
+                </label>
+
+                <input
+                    type="text"
+                    id="componentId"
+                    placeholder="CMP-014"
+                >
+
+            </div>
+
+        </div>
+
+        <!-- BUTTON -->
+
+        <button
+            type="submit"
+            class="submit-intervention-btn"
+        >
+
+            Save Intervention
+
+        </button>
+
+    </form>
+                </div>
+            </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="addIntervention.js"></script>
+    </body>
+</html>

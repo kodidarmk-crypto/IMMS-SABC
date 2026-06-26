@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Interventions | SABC</title>
+        <link rel="icon" type="image/png" href="image001.png"/>
+        <link rel="stylesheet" href="style.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <header class="topbar-interventions">
+                <a href="Usines.html" class="topbar-logo-interventions">
+                    <img src="image001.png" alt="SABC Logo" onerror="this.style.display='none'"/>
+                    <div class="topbar-logo-text-interventions">
+                        SABC
+                        <span>Interventions</span>
+                    </div>
+                </a>
+                <div class="topbar-divider-gmao"></div>
+                <div class="topbar-spacer-gmao"></div>
+                <nav class="topbar-nav-interventions">
+                    <a href="Usines.html" class="topbar-nav-link-interventions">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+                            <line x1="2" y1="11" x2="22" y2="11"/>
+                        </svg>
+                        <span>Usines</span>
+                    </a>
+                    <a href="addIntervention.html" class="topbar-nav-link-interventions">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                        <span>Add Intervention</span>
+                    </a>
+                    <a href="gmao.html" class="topbar-nav-link-interventions active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="M7 16v-4"/>
+                            <path d="M12 16V8"/>
+                            <path d="M17 16v-7"/>
+                        </svg>
+                        <span>GMAO</span>
+                    </a>
+                </nav>
+            </header>
+            <div class="interventions-content">
+
+                <!-- ========================= -->
+                <!-- CALENDAR SECTION -->
+                <!-- ========================= -->
+
+                <div class="interventions-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Interventions Calendar</h2>
+                            <p>Scheduled maintenance operations</p>
+                        </div>
+                        <div class="intervention-controls">
+                            <select id="sort-interventions" class="sort-select">
+                                <option value="">Sort by</option>
+                                <option value="date">Date</option>
+                                <option value="type">Type</option>
+                                <option value="machine">Machine</option>
+                            </select>
+                            <button id="toggle-view-btn" class="toggle-view-btn">Show All</button>
+                        </div>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prev-month" class="calendar-nav-btn">←</button>
+                            <h3 id="calendar-title">May 2026</h3>
+                            <button id="next-month" class="calendar-nav-btn">→</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">Sun</div>
+                            <div class="weekday">Mon</div>
+                            <div class="weekday">Tue</div>
+                            <div class="weekday">Wed</div>
+                            <div class="weekday">Thu</div>
+                            <div class="weekday">Fri</div>
+                            <div class="weekday">Sat</div>
+                        </div>
+                        <div class="calendar-days" id="calendar-days"></div>
+                    </div>
+                </div>
+
+                <div class="interventions-list-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Scheduled Operations</h2>
+                            <p>Upcoming maintenance tasks</p>
+                        </div>
+                        <div class="intervention-controls">
+                            <select id="schedule-filter-type" class="sort-select">
+                                <option value="all">All types</option>
+                                <option value="preventive">Preventive</option>
+                                <option value="predictive">Predictive</option>
+                                <option value="corrective">Corrective</option>
+                                <option value="inspection">Inspection</option>
+                            </select>
+                            <select id="schedule-sort" class="sort-select">
+                                <option value="date-asc">Date ascending</option>
+                                <option value="date-desc">Date descending</option>
+                                <option value="type-asc">Type ascending</option>
+                                <option value="type-desc">Type descending</option>
+                            </select>
+                            <button id="export-schedule-pdf" class="toggle-view-btn">Export PDF</button>
+                        </div>
+                    </div>
+                    <div class="operations-list" id="operations-list"></div>
+                </div>
+
+                <div class="interventions-overdue-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>Overdue Operations</h2>
+                            <p>Late or unresolved operations</p>
+                        </div>
+                        <div class="intervention-controls">
+                            <select id="overdue-filter-type" class="sort-select">
+                                <option value="all">All types</option>
+                                <option value="preventive">Preventive</option>
+                                <option value="predictive">Predictive</option>
+                                <option value="corrective">Corrective</option>
+                                <option value="inspection">Inspection</option>
+                            </select>
+                            <select id="overdue-sort" class="sort-select">
+                                <option value="date-asc">Date ascending</option>
+                                <option value="date-desc">Date descending</option>
+                                <option value="type-asc">Type ascending</option>
+                                <option value="type-desc">Type descending</option>
+                            </select>
+                            <button id="export-overdue-pdf" class="toggle-view-btn">Export PDF</button>
+                        </div>
+                    </div>
+                    <div class="operations-list" id="overdue-list"></div>
+                    <div class="intervention-kpi" id="intervention-kpi"></div>
+                </div>
+
+            </div>
+
+            <!-- ALERTS SECTION -->
+            <div class="alert-intervention"></div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+        <script src="supabase-config.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+        <script src="interventions.js"></script>
+    </body>
+</html>

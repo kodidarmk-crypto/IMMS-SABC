@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Machine | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+             <div class="logo-bar-addMachine">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-addMachine" />
+            </div>
+                <div class="add-machine-card">
+                    <div class="add-chaine-header">
+                        <h1>Add a Machine</h1>
+                         <p>Fill in the informations for the machine.</p>
+                    </div>
+                    <form class="add-machine-form">
+                        <div class="form-grid-addMachine">
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Machine name</label>
+                                <input type="text" id="MachineName" placeholder="Ex: Paramix" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            </div>
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Factory</label>
+                                <select id="UsineMachine" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px; background-color: #fff;">
+                                    <option value="">Select a factory</option>
+                                </select> 
+                            </div>
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Machine Type</label>
+                                <input type="text" id="MachineType" placeholder="Ex: Mixing Machine" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            </div>
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Machine Image</label>
+                                <div style="position: relative; border: 2px dashed #3498db; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer;" id="imageDropZone">
+                                    <input type="file" id="MachineImage" accept="image/*" style="display: none;">
+                                    <span style="color: #3498db; font-weight: 500;" id="imageLabel">Click to upload or drag and drop</span>
+                                </div>
+                            </div>
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Manufacturer</label>
+                                <input type="text" id="MachineManufacturer" placeholder="Ex: Sidel" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            </div>
+                            <div class="form-group-addMachine">
+                                <label style="font-weight: 600; color: #2c3e50;">Responsable</label>
+                                <input type="text" id="MachineResponsable" placeholder="Ex: Kodi" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                            </div>
+                        </div>
+                        <button type="submit" class="create-Machine-btn" onclick="this.closest('form').querySelector('button[type=submit]')">
+                             Add Machine
+                        </button>
+                    </form>
+                </div>
+            <footer class="footer">
+                &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="addMachine.js"></script>
+    </body>
+</html>

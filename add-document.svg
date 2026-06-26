@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="320" viewBox="0 0 420 320" role="img" aria-labelledby="title">
+  <title id="title">Add document illustration</title>
+  <rect width="420" height="320" rx="28" fill="#f5f8fb"/>
+  <path d="M128 46h120l56 58v170H128z" fill="#fff" stroke="#d8e2ef" stroke-width="4"/>
+  <path d="M248 46v60h56" fill="#eaf1f8"/>
+  <path d="M160 142h116M160 178h116M160 214h80" stroke="#7f8c8d" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="304" cy="238" r="38" fill="#27ae60"/>
+  <path d="M286 238h36M304 220v36" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+</svg>

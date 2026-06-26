@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | SABC</title>
+  <link rel="icon" type="image/png" href="image001.png"/>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- LOGO -->
+    <div class="logo-bar">
+      <img src="image001.png" alt="Logo Brasserie" class="logo" />
+    </div>
+
+    <div class="card">
+      <!-- LEFT — illustration zone -->
+      <div class="card__left">
+        <img src="factory.svg" alt="illustration" style="width:100%; max-width:380px;"/>
+      </div>
+    
+      <!-- RIGHT — form -->
+      <div class="card__right">
+        <h1 class="title">Login</h1>
+        <p class="subtitle">Welcome to your computerized maintenance management system.<br>Login as a member to experience.</p>
+
+        <form id="loginform" novalidate>
+          <div class="field-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="My@email.com" autocomplete="email"/>
+            <span class="field-error" id="emailError"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="password">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="password" name="password" placeholder="••••••••••••" autocomplete="new-password"/>
+              <button type="button" class="toggle-pw" id="togglePw" aria-label="See Password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <span class="field-error" id="pwError"></span>
+          </div>
+
+          <div class="checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="terms" name="terms"/>
+              <span class="custom-check"></span>
+              I agree with the <a href="terms.html" class="link">term of service and data privacy policy</a>
+            </label>
+            <span class="field-error" id="termsError"></span>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <span class="btn-text">Login to account</span>
+            <span class="btn-loader" id="btnLoader"></span>
+          </button>
+        </form>
+
+        <p class="signin-link">New member? <a href="signup.html" class="link bold">Sign up</a></p>
+        <p class="forgot-link"><a href="forgot-password.html" class="link">Forgot password?</a></p>
+      </div>
+    </div>
+    <footer class="footer">
+    &copy; 2026, by Kochere Djiomegni for SABC
+    </footer>
+  </div>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

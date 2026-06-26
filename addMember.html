@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Members | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+            <div class="logo-bar-addMember">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-addMember" />
+            </div>
+            <div class="add-member-card">
+                <div class="add-member-header">
+                        <h1>Add a Member</h1>
+                         <p>Fill in the informations of the Member.</p>
+                </div>
+                <form class="add-member-form">
+                    <div class="form-grid-addMember">
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">First Name</label>
+                            <input type="text" id="FirstName" placeholder="Ex: John" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Last Name</label>
+                            <input type="text" id="LastName" placeholder="Ex: Doe" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Email</label>
+                            <input type="email" id="Email" placeholder="Ex: john.doe@example.com" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Phone Number</label>
+                            <input type="tel" id="PhoneNumber" placeholder="Ex: +237645678900" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Factory</label>
+                            <select id="Factory" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;"> 
+                                    <option value="">Select a factory</option>
+                            </select>
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Production lines</label>
+                            <select id="productionline" multiple style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;"> 
+                                    <option value="">Select one or more production lines</option>
+                            </select>
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Role</label>
+                            <select id="Role" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                                    <option value="">Select a role</option>
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Admin-worker">Electrician / Mechanic</option>
+                                    <option value="Intern">Intern</option>
+                                    <option value="Operator">Operator</option>
+                            </select>
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Password</label>
+                            <input type="password" id="Password" placeholder="Enter a password" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                        <div class="form-group-addMember">
+                            <label style="font-weight: 600; color: #2c3e50;">Confirm Password</label>
+                            <input type="password" id="ConfirmPassword" placeholder="Confirm your password" style="padding: 10px; border: 1px solid #bdc3c7; border-radius: 5px;">
+                        </div>
+                    </div>
+                        <button type="submit" class="create-member-btn" style="background-color: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">
+                             Add Member
+                        </button>
+                </form>
+            </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="addMember.js"></script>
+    </body>
+</html>

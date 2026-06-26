@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="320" viewBox="0 0 420 320" role="img" aria-labelledby="title">
+  <title id="title">Contact support illustration</title>
+  <rect width="420" height="320" rx="28" fill="#eef7f4"/>
+  <circle cx="116" cy="102" r="44" fill="#27ae60" opacity=".18"/>
+  <circle cx="300" cy="210" r="58" fill="#2980b9" opacity=".14"/>
+  <rect x="78" y="74" width="264" height="172" rx="22" fill="#ffffff" stroke="#d7e5e1" stroke-width="4"/>
+  <path d="M94 100l116 78 116-78" fill="none" stroke="#1f6f5b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 224l82-68M324 224l-82-68" fill="none" stroke="#9fb8b1" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="320" cy="92" r="34" fill="#f39c12"/>
+  <path d="M306 92h28M320 78v28" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+</svg>

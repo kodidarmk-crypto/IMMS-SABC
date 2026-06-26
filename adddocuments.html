@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Add Documents | SABC</title>
+         <link rel="icon" type="image/png" href="image001.png"/>
+         <link rel="stylesheet" href="style.css" />
+         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="page-wrapper">
+             <div class="logo-bar-adddocuments">
+                <img src="image001.png" alt="Logo Brasserie" class="logo-adddocuments" />
+            </div>
+            <div class="card-adddocuments">
+                <div class="card_adddocuments_left">
+                    <img src="add-document.svg" alt="Add Document" />
+                </div>
+                <div class="card_adddocuments_right">
+                    <h2 class="title-adddocuments">Add New Document</h2>
+                    <p class="subtitle-adddocuments">Please fill in the details below to add a new document.</p>
+                    <form>
+                        <div class="field-group-adddocuments">
+                            <label for="documentTitle">Document Title</label>
+                            <input type="text" id="documentTitle" name="documentTitle" placeholder="Document Title" />
+                            <span class="field-error" id="documentTitleError"></span>
+                        </div>
+                        <div class="field-group-adddocuments">
+                            <label for="documentDescription">Document Description</label>
+                            <textarea id="documentDescription" name="documentDescription" placeholder="Document Description"></textarea>
+                            <span class="field-error" id="documentDescriptionError"></span>
+                        </div>
+                        <div class="field-group-adddocuments">
+                            <label for="documentFile">Upload Document</label>
+                            <div class="custom-file-upload">
+                             <input type="file" id="documentFile">
+                             <div class="custom-file-content">
+                                <div class="custom-file-icon"> 📁</div>
+                                    <div class="custom-file-text">
+                                    <h3>Choose a document</h3>
+                                    <p>Drag & drop or click to upload</p>
+                                   </div>
+                                </div>
+                             </div>
+                             <span class="field-error" id="documentFileError"></span>
+                        </div>
+                        <button type="submit" class="btn-primary-adddocuments">
+                            <span class="btn-text">Upload Document</span>
+                            <span class="btn-loader" id="btnLoader"></span>
+                        </button>
+                    </form>
+                    <p class="backgmao-link">Get back to the <a href="gmao.html" class="link bold">GMAO</a></p>
+                </div>
+            </div>
+            <footer class="footer">
+             &copy; 2026, by Kochere Djiomegni for SABC
+            </footer>
+        </div>
+<script src="supabase-config.js"></script>
+        <script src="adddocuments.js"></script>
+    </body>
+</html>
