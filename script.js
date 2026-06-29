@@ -1,10 +1,12 @@
 // ============================================================
-//  IMMS-SABC — script.js (login.html) — fix erreur vide
+//  IMMS-SABC — script.js (login.html)
+//  Rôles réels BDD : intern, operator, mechanic, administrator
 // ============================================================
 
 document.addEventListener('supabase:ready', () => {
   const sb = window._supabase;
 
+  // Redirige si session déjà active
   sb.auth.getSession().then(({ data: { session } }) => {
     if (session) redirectByRole(session.user.id);
   });
@@ -42,14 +44,13 @@ document.addEventListener('supabase:ready', () => {
 
     if (error) {
       setLoad(false);
-      // Affiche le vrai message d'erreur
-      const msg = error.message || error.msg || JSON.stringify(error) || 'Erreur inconnue';
-      console.error('[IMMS login] Supabase error:', error);
-      // Messages user-friendly
-      if (msg.toLowerCase().includes('invalid login') || msg.toLowerCase().includes('invalid credentials')) {
+      const msg = error.message || '';
+      if (msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('credentials')) {
         showErr('emailError', 'E-mail ou mot de passe incorrect.');
-      } else if (msg.toLowerCase().includes('email not confirmed')) {
+      } else if (msg.toLowerCase().includes('not confirmed')) {
         showErr('emailError', 'E-mail non confirmé. Vérifiez votre boîte mail.');
+      } else if (msg.toLowerCase().includes('network') || msg === '') {
+        showErr('emailError', 'Erreur réseau. Vérifiez votre connexion.');
       } else {
         showErr('emailError', msg);
       }
@@ -61,22 +62,25 @@ document.addEventListener('supabase:ready', () => {
 
   async function redirectByRole(userId) {
     const { data: profile, error } = await sb
-      .from('profiles').select('role').eq('id', userId).single();
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
 
     if (error || !profile) {
       setLoad(false);
-      console.error('[IMMS login] Profile fetch error:', error);
       showErr('emailError', 'Profil introuvable. Contactez un administrateur.');
       await sb.auth.signOut();
       return;
     }
 
     const r = profile.role;
-    if (r === 'intern' || r === 'operateur')
+    // Rôles exacts de la BDD
+    if (r === 'intern' || r === 'operator') {
       window.location.href = 'dashboard-op.html';
-    else if (r === 'mecanicien' || r === 'administrateur')
+    } else if (r === 'mechanic' || r === 'administrator') {
       window.location.href = 'Usines.html';
-    else {
+    } else {
       await sb.auth.signOut();
       showErr('emailError', `Rôle "${r}" non reconnu. Contactez un administrateur.`);
       setLoad(false);
