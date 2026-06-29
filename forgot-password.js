@@ -1,52 +1,77 @@
 // ============================================================
 //  IMMS-SABC — forgot-password.js
-//  Envoie un lien de réinitialisation par email via Supabase
+//  Adapté aux IDs exacts de forgot-password.html :
+//  - bouton : onclick="sendResetLink()"  → fonction globale
+//  - input  : #email
+//  - erreur : #email-error
+//  - spinner: #btn-send-spinner
+//  - label  : #btn-send-label
+//  - step 2 : #step-confirm  +  #confirm-email
+//  NB : Le SDK Supabase est déjà chargé en dur dans le HTML
+//       supabase-config.js crée window._supabase via UMD global
 // ============================================================
 
-document.addEventListener('supabase:ready', () => {
-  const sb   = window._supabase;
-  const form = document.getElementById('forgotForm');
-  const emailEl = document.getElementById('email');
-  const msgEl   = document.getElementById('forgotMsg');   // div feedback
-  const btnEl   = document.getElementById('submitBtn');
+// sendResetLink() est appelée par onclick dans le HTML
+// On l'expose donc sur window directement, sans attendre l'event
+// On utilise une retry courte si _supabase n'est pas encore prêt
 
-  if (!form) return;
+window.sendResetLink = async function () {
+  const sb = window._supabase;
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = emailEl.value.trim();
-
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      showMsg('Entrez un e-mail valide.', 'error'); return;
-    }
-
-    btnEl.disabled = true;
-    btnEl.textContent = 'Envoi en cours…';
-
-    // L'URL de redirect doit correspondre à l'URL de ton site Vercel
-    // Configure aussi dans Supabase Dashboard > Auth > URL Configuration > Redirect URLs
-    const redirectTo = `${window.location.origin}/change-password.html`;
-
-    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
-
-    btnEl.disabled = false;
-    btnEl.textContent = 'Envoyer le lien';
-
-    if (error) {
-      showMsg('Erreur : ' + error.message, 'error');
-    } else {
-      showMsg(
-        `Un lien de réinitialisation a été envoyé à <strong>${email}</strong>. Vérifiez votre boîte mail.`,
-        'success'
-      );
-      form.reset();
-    }
-  });
-
-  function showMsg(html, type) {
-    if (!msgEl) return;
-    msgEl.innerHTML = html;
-    msgEl.className = 'forgot-msg ' + type;
-    msgEl.style.display = 'block';
+  // Sécurité : si Supabase pas encore chargé, on attend
+  if (!sb) {
+    setTimeout(window.sendResetLink, 200);
+    return;
   }
-});
+
+  const emailEl   = document.getElementById('email');
+  const errorEl   = document.getElementById('email-error');
+  const spinner   = document.getElementById('btn-send-spinner');
+  const label     = document.getElementById('btn-send-label');
+  const btn       = document.getElementById('btn-send');
+  const stepEmail = document.getElementById('stepEmail');
+  const stepOk    = document.getElementById('step-confirm');
+  const confirmEl = document.getElementById('confirm-email');
+
+  // Reset erreur
+  if (errorEl) { errorEl.textContent = ''; errorEl.style.display = 'none'; }
+
+  const email = emailEl ? emailEl.value.trim() : '';
+
+  // Validation
+  if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (errorEl) {
+      errorEl.textContent = 'Entrez un e-mail valide.';
+      errorEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // Loading
+  if (btn)     btn.disabled = true;
+  if (spinner) spinner.style.display = 'inline-block';
+  if (label)   label.textContent = 'Envoi…';
+
+  // URL de redirection vers change-password.html
+  const redirectTo = window.location.origin + '/change-password.html';
+
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+
+  // Reset loading
+  if (btn)     btn.disabled = false;
+  if (spinner) spinner.style.display = 'none';
+  if (label)   label.textContent = 'Send Link!';
+
+  if (error) {
+    if (errorEl) {
+      errorEl.textContent = 'Erreur : ' + error.message;
+      errorEl.style.display = 'block';
+    }
+    return;
+  }
+
+  // Succès → affiche step 2
+  if (confirmEl) confirmEl.textContent = email;
+  if (stepEmail) stepEmail.style.display = 'none';
+  if (stepOk)    stepOk.style.display    = 'block';
+};

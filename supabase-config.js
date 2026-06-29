@@ -1,73 +1,65 @@
 // ============================================================
-//  IMMS-SABC — Supabase Configuration
-//  Project : https://afujoysgsoluozufbbrg.supabase.co
+//  IMMS-SABC — supabase-config.js
+//  Compatible avec forgot-password.html qui charge déjà le SDK
+//  en dur : <script src="https://cdn.jsdelivr.net/..."></script>
 // ============================================================
 
 const SUPABASE_URL  = 'https://afujoysgsoluozufbbrg.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmdWpveXNnc29sdW96dWZiYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDc3NzksImV4cCI6MjA5NTYyMzc3OX0.K6RV1fZu5YDR8Zl3A8ETVyeE5OQ63xPLpG6qeJl5GBI';
 
-// Charge le SDK Supabase depuis CDN (compatible navigateur, pas de bundler)
-(function loadSupabase() {
+function initSupabase() {
+  // Le SDK peut déjà être présent (chargé en dur dans certaines pages)
+  // On utilise le global window.supabase s'il existe, sinon on charge le SDK
+  if (window.supabase && window.supabase.createClient) {
+    window._supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+      auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
+    });
+    document.dispatchEvent(new Event('supabase:ready'));
+    return;
+  }
+
+  // Sinon, charge le SDK dynamiquement
   const script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
   script.onload = () => {
-    window._supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
-      auth: {
-        autoRefreshToken : true,
-        persistSession   : true,
-        detectSessionInUrl: true,
-        storage          : window.localStorage   // session persistée entre pages
-      }
+    window._supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+      auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
     });
-    // Déclenche un événement custom pour que les autres scripts sachent que c'est prêt
     document.dispatchEvent(new Event('supabase:ready'));
   };
-  script.onerror = () => console.error('[IMMS] Impossible de charger le SDK Supabase.');
+  script.onerror = () => console.error('[IMMS] Impossible de charger Supabase SDK.');
   document.head.appendChild(script);
-})();
+}
 
-// Helper global — attend que Supabase soit prêt avant d'exécuter le callback
+// Si le DOM est déjà prêt, on init directement
+// Sinon on attend DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSupabase);
+} else {
+  initSupabase();
+}
+
+// ── Helpers navigation entre pages ─────────────────────────
 window.withSupabase = (cb) => {
   if (window._supabase) { cb(window._supabase); return; }
   document.addEventListener('supabase:ready', () => cb(window._supabase), { once: true });
 };
-
-// Helper : récupère la session active (retourne null si non connecté)
-window.getSession = () =>
-  window._supabase
-    ? window._supabase.auth.getSession().then(({ data }) => data.session)
-    : Promise.resolve(null);
-
-// Helper : récupère le profil complet de l'utilisateur connecté (depuis table profiles)
+window.getSession    = () => window._supabase
+  ? window._supabase.auth.getSession().then(({ data }) => data.session)
+  : Promise.resolve(null);
 window.getCurrentUser = async () => {
-  const session = await window.getSession();
-  if (!session) return null;
-  const { data, error } = await window._supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
-  if (error) { console.error('[IMMS] getCurrentUser:', error.message); return null; }
+  const s = await window.getSession();
+  if (!s) return null;
+  const { data } = await window._supabase.from('profiles').select('*').eq('id', s.user.id).single();
   return data;
 };
 
-// Helper : passe le machine_id entre pages via sessionStorage
-window.setMachineContext = (machineId, machineName) => {
-  sessionStorage.setItem('current_machine_id',   machineId);
-  sessionStorage.setItem('current_machine_name',  machineName || '');
-};
-window.getMachineId = () => sessionStorage.getItem('current_machine_id');
-
-// Helper : passe le chaine_id entre pages
-window.setChaineContext = (chaineId, chaineName) => {
-  sessionStorage.setItem('current_chaine_id',   chaineId);
-  sessionStorage.setItem('current_chaine_name',  chaineName || '');
-};
-window.getChaineId = () => sessionStorage.getItem('current_chaine_id');
-
-// Helper : passe le usine_id entre pages
-window.setUsineContext = (usineId, usineName) => {
-  sessionStorage.setItem('current_usine_id',   usineId);
-  sessionStorage.setItem('current_usine_name',  usineName || '');
-};
-window.getUsineId = () => sessionStorage.getItem('current_usine_id');
+window.setUsineContext   = (id, nom) => { sessionStorage.setItem('usine_id',   id); sessionStorage.setItem('usine_nom',   nom||''); };
+window.getUsineId        = ()        =>   sessionStorage.getItem('usine_id');
+window.getUsineNom       = ()        =>   sessionStorage.getItem('usine_nom');
+window.setChaineContext  = (id, nom) => { sessionStorage.setItem('chaine_id',  id); sessionStorage.setItem('chaine_nom',  nom||''); };
+window.getChaineId       = ()        =>   sessionStorage.getItem('chaine_id');
+window.getChaineNom      = ()        =>   sessionStorage.getItem('chaine_nom');
+window.setMachineContext = (id, nom) => { sessionStorage.setItem('machine_id', id); sessionStorage.setItem('machine_nom', nom||''); };
+window.getMachineId      = ()        =>   sessionStorage.getItem('machine_id');
+window.getMachineNom     = ()        =>   sessionStorage.getItem('machine_nom');
