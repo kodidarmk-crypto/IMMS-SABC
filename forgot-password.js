@@ -1,42 +1,52 @@
-function setLoading(on) {
-  document.getElementById("btn-send-label").style.display = on ? "none" : "inline";
-  document.getElementById("btn-send-spinner").style.display = on ? "inline-block" : "none";
-  document.getElementById("btn-send").disabled = on;
-}
+// ============================================================
+//  IMMS-SABC — forgot-password.js
+//  Envoie un lien de réinitialisation par email via Supabase
+// ============================================================
 
-function showError(msg) {
-  document.getElementById("email-error").textContent = msg;
-  document.getElementById("email").classList.toggle("error", Boolean(msg));
-}
+document.addEventListener('supabase:ready', () => {
+  const sb   = window._supabase;
+  const form = document.getElementById('forgotForm');
+  const emailEl = document.getElementById('email');
+  const msgEl   = document.getElementById('forgotMsg');   // div feedback
+  const btnEl   = document.getElementById('submitBtn');
 
-async function sendResetLink() {
-  const email = document.getElementById("email").value.trim();
-  showError("");
+  if (!form) return;
 
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showError("Please enter a valid email address.");
-    return;
-  }
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailEl.value.trim();
 
-  setLoading(true);
-  try {
-    const sb = await window.IMMS.getClient();
-    const redirectTo = `${window.location.origin}${window.location.pathname.replace(/forgot-password\.html$/i, "change-password.html")}`;
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      showMsg('Entrez un e-mail valide.', 'error'); return;
+    }
+
+    btnEl.disabled = true;
+    btnEl.textContent = 'Envoi en cours…';
+
+    // L'URL de redirect doit correspondre à l'URL de ton site Vercel
+    // Configure aussi dans Supabase Dashboard > Auth > URL Configuration > Redirect URLs
+    const redirectTo = `${window.location.origin}/change-password.html`;
+
     const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
-    if (error) throw error;
 
-    document.getElementById("confirm-email").textContent = email;
-    document.getElementById("stepEmail").style.display = "none";
-    document.getElementById("step-confirm").style.display = "block";
-  } catch (error) {
-    showError(error.message || "Unable to send reset link.");
-  } finally {
-    setLoading(false);
-  }
-}
+    btnEl.disabled = false;
+    btnEl.textContent = 'Envoyer le lien';
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("email")?.addEventListener("keydown", e => {
-    if (e.key === "Enter") sendResetLink();
+    if (error) {
+      showMsg('Erreur : ' + error.message, 'error');
+    } else {
+      showMsg(
+        `Un lien de réinitialisation a été envoyé à <strong>${email}</strong>. Vérifiez votre boîte mail.`,
+        'success'
+      );
+      form.reset();
+    }
   });
+
+  function showMsg(html, type) {
+    if (!msgEl) return;
+    msgEl.innerHTML = html;
+    msgEl.className = 'forgot-msg ' + type;
+    msgEl.style.display = 'block';
+  }
 });

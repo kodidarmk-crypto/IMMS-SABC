@@ -1,69 +1,73 @@
-const IMMS_SUPABASE_URL = "https://afujoysgsoluozufbbrg.supabase.co";
-const IMMS_SUPABASE_KEY = "sb_publishable_Jy814jkIkXUAEAOhpmzFoA_MuxNhAsM";
+// ============================================================
+//  IMMS-SABC — Supabase Configuration
+//  Project : https://afujoysgsoluozufbbrg.supabase.co
+// ============================================================
 
-window.IMMS = window.IMMS || {};
+const SUPABASE_URL  = 'https://afujoysgsoluozufbbrg.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmdWpveXNnc29sdW96dWZiYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDc3NzksImV4cCI6MjA5NTYyMzc3OX0.K6RV1fZu5YDR8Zl3A8ETVyeE5OQ63xPLpG6qeJl5GBI';
 
-window.IMMS.ready = new Promise((resolve, reject) => {
-  if (window.supabase?.createClient) {
-    window.IMMS.supabase = window.supabase.createClient(IMMS_SUPABASE_URL, IMMS_SUPABASE_KEY);
-    resolve(window.IMMS.supabase);
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+// Charge le SDK Supabase depuis CDN (compatible navigateur, pas de bundler)
+(function loadSupabase() {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
   script.onload = () => {
-    window.IMMS.supabase = window.supabase.createClient(IMMS_SUPABASE_URL, IMMS_SUPABASE_KEY);
-    resolve(window.IMMS.supabase);
+    window._supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+      auth: {
+        autoRefreshToken : true,
+        persistSession   : true,
+        detectSessionInUrl: true,
+        storage          : window.localStorage   // session persistée entre pages
+      }
+    });
+    // Déclenche un événement custom pour que les autres scripts sachent que c'est prêt
+    document.dispatchEvent(new Event('supabase:ready'));
   };
-  script.onerror = () => reject(new Error("Unable to load Supabase SDK"));
+  script.onerror = () => console.error('[IMMS] Impossible de charger le SDK Supabase.');
   document.head.appendChild(script);
-});
+})();
 
-window.IMMS.getClient = async () => window.IMMS.ready;
-
-window.IMMS.getContext = () => ({
-  usineId: sessionStorage.getItem("selectedUsine") || localStorage.getItem("selectedUsine"),
-  chaineId: sessionStorage.getItem("selectedChaine") || localStorage.getItem("selectedChaine"),
-  machineId: sessionStorage.getItem("machineId") || localStorage.getItem("machineId")
-});
-
-window.IMMS.setContext = (key, value) => {
-  sessionStorage.setItem(key, value);
-  localStorage.setItem(key, value);
+// Helper global — attend que Supabase soit prêt avant d'exécuter le callback
+window.withSupabase = (cb) => {
+  if (window._supabase) { cb(window._supabase); return; }
+  document.addEventListener('supabase:ready', () => cb(window._supabase), { once: true });
 };
 
-window.IMMS.publicUrl = (path, bucket = "images") => {
-  if (!path) return "";
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${IMMS_SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
+// Helper : récupère la session active (retourne null si non connecté)
+window.getSession = () =>
+  window._supabase
+    ? window._supabase.auth.getSession().then(({ data }) => data.session)
+    : Promise.resolve(null);
+
+// Helper : récupère le profil complet de l'utilisateur connecté (depuis table profiles)
+window.getCurrentUser = async () => {
+  const session = await window.getSession();
+  if (!session) return null;
+  const { data, error } = await window._supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+  if (error) { console.error('[IMMS] getCurrentUser:', error.message); return null; }
+  return data;
 };
 
-if (window.location.protocol === "file:") {
-  document.addEventListener("DOMContentLoaded", () => {
-    const warning = document.createElement("div");
-    warning.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999;padding:14px 16px;background:#f1c40f;color:#1f1f1f;font-weight:700;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.2);";
-    warning.textContent = "⚠️ Veuillez lancer ce projet via un serveur local (http://localhost), pas en file://. Supabase et les uploads ne fonctionnent pas avec file://.";
-    document.body.prepend(warning);
-  });
-}
-
-window.IMMS.escapeHtml = (value = "") =>
-  String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[char]));
-
-window.IMMS.notify = (message, type = "info") => {
-  const existing = document.querySelector(".imms-toast");
-  if (existing) existing.remove();
-
-  const toast = document.createElement("div");
-  toast.className = `imms-toast imms-toast-${type}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 4200);
+// Helper : passe le machine_id entre pages via sessionStorage
+window.setMachineContext = (machineId, machineName) => {
+  sessionStorage.setItem('current_machine_id',   machineId);
+  sessionStorage.setItem('current_machine_name',  machineName || '');
 };
+window.getMachineId = () => sessionStorage.getItem('current_machine_id');
+
+// Helper : passe le chaine_id entre pages
+window.setChaineContext = (chaineId, chaineName) => {
+  sessionStorage.setItem('current_chaine_id',   chaineId);
+  sessionStorage.setItem('current_chaine_name',  chaineName || '');
+};
+window.getChaineId = () => sessionStorage.getItem('current_chaine_id');
+
+// Helper : passe le usine_id entre pages
+window.setUsineContext = (usineId, usineName) => {
+  sessionStorage.setItem('current_usine_id',   usineId);
+  sessionStorage.setItem('current_usine_name',  usineName || '');
+};
+window.getUsineId = () => sessionStorage.getItem('current_usine_id');

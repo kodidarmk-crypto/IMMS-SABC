@@ -1,105 +1,63 @@
-function showState(id) {
-  ["state-loading", "state-invalid", "state-form", "state-success"].forEach(stateId => {
-    document.getElementById(stateId).style.display = stateId === id ? "block" : "none";
-  });
-}
+// ============================================================
+//  IMMS-SABC — change-password.js
+//  Permet à l'utilisateur de définir un nouveau mot de passe
+//  après avoir cliqué sur le lien reçu par email
+// ============================================================
 
-document.addEventListener("DOMContentLoaded", async () => {
-  showState("state-loading");
-  const sb = await window.IMMS.getClient();
+document.addEventListener('supabase:ready', async () => {
+  const sb    = window._supabase;
+  const form  = document.getElementById('changePasswordForm');
+  const pw1   = document.getElementById('newPassword');
+  const pw2   = document.getElementById('confirmPassword');
+  const msgEl = document.getElementById('changePwMsg');
+  const btnEl = document.getElementById('submitBtn');
 
-  sb.auth.onAuthStateChange((event) => {
-    if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") showState("state-form");
-  });
+  if (!form) return;
 
-  const { data } = await sb.auth.getSession();
-  if (data.session) showState("state-form");
+  // Supabase met automatiquement la session à jour depuis l'URL (#access_token=...)
+  // On vérifie qu'une session de type "recovery" est bien active
+  const { data: { session } } = await sb.auth.getSession();
 
-  setTimeout(() => {
-    if (document.getElementById("state-loading").style.display !== "none") showState("state-invalid");
-  }, 2000);
-
-  document.getElementById("new-password")?.addEventListener("input", onPwInput);
-  document.getElementById("confirm-password")?.addEventListener("keydown", e => {
-    if (e.key === "Enter") changePassword();
-  });
-});
-
-function togglePw(inputId, btn) {
-  const input = document.getElementById(inputId);
-  const isHidden = input.type === "password";
-  input.type = isHidden ? "text" : "password";
-  btn.style.opacity = isHidden ? "1" : "0.55";
-}
-
-function getStrength(pw) {
-  let score = 0;
-  if (pw.length >= 8) score++;
-  if (pw.length >= 12) score++;
-  if (/[A-Z]/.test(pw)) score++;
-  if (/[0-9]/.test(pw)) score++;
-  if (/[^A-Za-z0-9]/.test(pw)) score++;
-  return score;
-}
-
-function onPwInput() {
-  const pw = document.getElementById("new-password").value;
-  const score = getStrength(pw);
-  const fill = document.getElementById("strength-fill");
-  const label = document.getElementById("strength-label");
-  const levels = [
-    { pct: "10%", color: "#E74C3C", text: "Very low" },
-    { pct: "25%", color: "#E74C3C", text: "Low" },
-    { pct: "50%", color: "#F39C12", text: "Medium" },
-    { pct: "75%", color: "#2980B9", text: "High" },
-    { pct: "90%", color: "#27AE60", text: "Very high" },
-    { pct: "100%", color: "#1E8449", text: "Excellent" }
-  ];
-  const level = levels[Math.min(score, 5)];
-  fill.style.width = pw.length ? level.pct : "0%";
-  fill.style.background = level.color;
-  label.textContent = pw.length ? level.text : "";
-  label.style.color = level.color;
-}
-
-async function changePassword() {
-  const pw = document.getElementById("new-password").value;
-  const confirm = document.getElementById("confirm-password").value;
-  document.getElementById("pw-error").textContent = "";
-  document.getElementById("confirm-error").textContent = "";
-
-  if (pw.length < 8) {
-    document.getElementById("pw-error").textContent = "Minimum 8 characters.";
-    return;
-  }
-  if (pw !== confirm) {
-    document.getElementById("confirm-error").textContent = "Passwords do not match.";
+  if (!session) {
+    showMsg(
+      'Lien invalide ou expiré. <a href="forgot-password.html">Redemander un lien</a>.',
+      'error'
+    );
+    if (btnEl) btnEl.disabled = true;
     return;
   }
 
-  document.getElementById("btn-change-label").style.display = "none";
-  document.getElementById("btn-change-spinner").style.display = "inline-block";
-  document.getElementById("btn-change").disabled = true;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = pw1.value;
+    const confirm  = pw2.value;
 
-  const sb = await window.IMMS.getClient();
-  const { error } = await sb.auth.updateUser({ password: pw });
-  if (error) {
-    document.getElementById("pw-error").textContent = error.message;
-    document.getElementById("btn-change-label").style.display = "inline";
-    document.getElementById("btn-change-spinner").style.display = "none";
-    document.getElementById("btn-change").disabled = false;
-    return;
-  }
-
-  showState("state-success");
-  let n = 3;
-  const tick = setInterval(async () => {
-    n -= 1;
-    document.getElementById("countdown").textContent = n;
-    if (n <= 0) {
-      clearInterval(tick);
-      await sb.auth.signOut();
-      window.location.href = "login.html";
+    if (!password || password.length < 8) {
+      showMsg('Le mot de passe doit contenir au moins 8 caractères.', 'error'); return;
     }
-  }, 1000);
-}
+    if (password !== confirm) {
+      showMsg('Les deux mots de passe ne correspondent pas.', 'error'); return;
+    }
+
+    btnEl.disabled = true;
+    btnEl.textContent = 'Mise à jour…';
+
+    const { error } = await sb.auth.updateUser({ password });
+
+    if (error) {
+      showMsg('Erreur : ' + error.message, 'error');
+      btnEl.disabled = false;
+      btnEl.textContent = 'Confirmer';
+    } else {
+      showMsg('Mot de passe mis à jour avec succès ! Redirection…', 'success');
+      setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+    }
+  });
+
+  function showMsg(html, type) {
+    if (!msgEl) return;
+    msgEl.innerHTML = html;
+    msgEl.className = 'changepw-msg ' + type;
+    msgEl.style.display = 'block';
+  }
+});

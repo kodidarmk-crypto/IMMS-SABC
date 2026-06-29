@@ -1,79 +1,90 @@
-let allChaines = [];
-let currentFilter = "all";
+// ============================================================
+//  IMMS-SABC — chaines.js
+//  Affiche les chaînes d'une usine spécifique
+// ============================================================
 
-const chaineStatuses = {
-  active: { label: "Active", color: "#27ae60" },
-  maintenance: { label: "Maintenance", color: "#f39c12" },
-  inactive: { label: "Inactive", color: "#e74c3c" }
-};
+document.addEventListener('supabase:ready', async () => {
+  const sb = window._supabase;
 
-async function loadChaines() {
-  const { usineId } = window.IMMS.getContext();
-  const container = document.querySelector(".chaines-container");
-  if (!usineId) {
-    container.innerHTML = '<p class="empty-state">Open a factory first.</p>';
-    return;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const usineId   = window.getUsineId();
+  const usineName = sessionStorage.getItem('current_usine_name') || 'Usine';
+
+  // Affiche le nom de l'usine dans le header si présent
+  const usineTitle = document.getElementById('usineName') || document.querySelector('.page-usine-name');
+  if (usineTitle) usineTitle.textContent = usineName;
+
+  if (!usineId) { window.location.href = 'Usines.html'; return; }
+
+  const grid = document.getElementById('chainesGrid') || document.querySelector('.chaines-grid');
+  if (!grid) return;
+
+  await loadChaines();
+
+  async function loadChaines() {
+    grid.innerHTML = '<p class="loading-text">Chargement des chaînes…</p>';
+
+    const { data: chaines, error } = await sb
+      .from('chaines')
+      .select('*, machines(count)')
+      .eq('usine_id', usineId)
+      .order('nom');
+
+    if (error) {
+      grid.innerHTML = `<p class="error-text">Erreur : ${error.message}</p>`; return;
+    }
+    if (!chaines || chaines.length === 0) {
+      grid.innerHTML = '<p class="empty-text">Aucune chaîne dans cette usine.</p>'; return;
+    }
+
+    grid.innerHTML = '';
+    chaines.forEach(ch => grid.appendChild(buildCard(ch)));
   }
 
-  try {
-    const sb = await window.IMMS.getClient();
-    const { data, error } = await sb
-      .from("chaines")
-      .select("*, machines(id)")
-      .eq("usine_id", usineId)
-      .order("name", { ascending: true });
-    if (error) throw error;
-    allChaines = data || [];
-    displayChaines(currentFilter === "all" ? allChaines : allChaines.filter(c => c.status === currentFilter));
-  } catch (error) {
-    container.innerHTML = `<p class="empty-state">${window.IMMS.escapeHtml(error.message)}</p>`;
-  }
-}
-
-function filterByStatus(status) {
-  currentFilter = status;
-  displayChaines(status === "all" ? allChaines : allChaines.filter(c => c.status === status));
-}
-
-function displayChaines(chaines) {
-  const container = document.querySelector(".chaines-container");
-  if (!chaines.length) {
-    container.innerHTML = '<p class="empty-state">No production lines found.</p>';
-    return;
-  }
-
-  container.innerHTML = chaines.map(chaine => {
-    const status = String(chaine.status || "active").toLowerCase();
-    const meta = chaineStatuses[status] || chaineStatuses.active;
-    return `
-      <div class="chaine-card">
-        <div class="chaine-left">
-          <h2>${window.IMMS.escapeHtml(chaine.name)}</h2>
-          <div class="chaine-infos">
-            <div class="chaine-info"><span class="info-label">Responsable</span><p>${window.IMMS.escapeHtml(chaine.responsable || "N/A")}</p></div>
-            <div class="chaine-info"><span class="info-label">Status</span><button class="status-pill" style="--status:${meta.color}" onclick="changeStatus('${chaine.id}', '${status}')">${meta.label}</button></div>
-          </div>
+  function buildCard(ch) {
+    const nbMachines = ch.machines?.[0]?.count ?? 0;
+    const card = document.createElement('div');
+    card.className = 'chaine-card';
+    card.innerHTML = `
+      <div class="chaine-card-body">
+        <h3>${ch.nom}</h3>
+        <p>${ch.description || ''}</p>
+        <div class="chaine-meta">
+          <span>${nbMachines} machine${nbMachines > 1 ? 's' : ''}</span>
+          <button class="status-btn status-${ch.statut}" data-id="${ch.id}" data-statut="${ch.statut}">
+            ${labelStatut(ch.statut)}
+          </button>
         </div>
-        <div class="chaine-right">
-          <div class="machine-count"><h1>${chaine.machines?.length || 0}</h1><span>Machines</span></div>
-          <button class="open-chaine-btn" onclick="openChaine('${chaine.id}')">Open</button>
-        </div>
-      </div>`;
-  }).join("");
-}
+      </div>
+    `;
 
-async function changeStatus(chaineId, currentStatus) {
-  const statuses = ["active", "maintenance", "inactive"];
-  const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
-  const sb = await window.IMMS.getClient();
-  const { error } = await sb.from("chaines").update({ status: nextStatus }).eq("id", chaineId);
-  if (error) return window.IMMS.notify(error.message, "error");
-  loadChaines();
-}
+    // Clic sur la carte → machines de cette chaîne
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('status-btn')) return;
+      window.setChaineContext(ch.id, ch.nom);
+      window.location.href = 'machines.html';
+    });
 
-function openChaine(chaineId) {
-  window.IMMS.setContext("selectedChaine", chaineId);
-  window.location.href = "machines.html";
-}
+    // Bouton statut
+    card.querySelector('.status-btn').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      const next = nextStatut(btn.dataset.statut);
+      await sb.from('chaines').update({ statut: next }).eq('id', ch.id);
+      btn.dataset.statut = next;
+      btn.className = `status-btn status-${next}`;
+      btn.textContent = labelStatut(next);
+    });
 
-document.addEventListener("DOMContentLoaded", loadChaines);
+    return card;
+  }
+
+  function labelStatut(s) {
+    return s === 'active' ? '✅ Active' : s === 'maintenance' ? '🔧 Maintenance' : '⛔ Inactive';
+  }
+  function nextStatut(s) {
+    return s === 'active' ? 'maintenance' : s === 'maintenance' ? 'inactive' : 'active';
+  }
+});

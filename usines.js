@@ -1,74 +1,91 @@
-let allUsines = [];
+// ============================================================
+//  IMMS-SABC — usines.js
+//  Affiche la liste des usines, gère le statut et la navigation
+// ============================================================
 
-const statusMeta = {
-  active: { label: "Active", color: "#27ae60" },
-  maintenance: { label: "Maintenance", color: "#f39c12" },
-  inactive: { label: "Inactive", color: "#e74c3c" }
-};
+document.addEventListener('supabase:ready', async () => {
+  const sb = window._supabase;
 
-async function loadUsines() {
-  try {
-    const sb = await window.IMMS.getClient();
-    const { data, error } = await sb
-      .from("usines")
-      .select("*, chaines(id)")
-      .order("name", { ascending: true });
-    if (error) throw error;
-    allUsines = data || [];
-    displayUsines(allUsines);
-  } catch (error) {
-    document.querySelector(".usines-page").innerHTML = `<p class="empty-state">${window.IMMS.escapeHtml(error.message)}</p>`;
+  // Vérifie session
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const grid = document.getElementById('usinesGrid') || document.querySelector('.usines-grid');
+  if (!grid) return;
+
+  await loadUsines();
+
+  async function loadUsines() {
+    grid.innerHTML = '<p class="loading-text">Chargement des usines…</p>';
+
+    const { data: usines, error } = await sb
+      .from('usines')
+      .select('*, chaines(count)')
+      .order('nom');
+
+    if (error) {
+      grid.innerHTML = `<p class="error-text">Erreur : ${error.message}</p>`;
+      return;
+    }
+    if (!usines || usines.length === 0) {
+      grid.innerHTML = '<p class="empty-text">Aucune usine enregistrée.</p>';
+      return;
+    }
+
+    grid.innerHTML = '';
+    usines.forEach(usine => grid.appendChild(buildCard(usine)));
   }
-}
 
-function displayUsines(usines) {
-  const container = document.querySelector(".usines-page");
-  if (!usines.length) {
-    container.innerHTML = '<p class="empty-state">No factories found.</p>';
-    return;
+  function buildCard(usine) {
+    const nbChaines = usine.chaines?.[0]?.count ?? 0;
+    const card = document.createElement('div');
+    card.className = 'usine-card';
+    card.innerHTML = `
+      <div class="usine-card-img">
+        <img src="${usine.image_url || 'factory.svg'}" alt="${usine.nom}"
+             onerror="this.src='factory.svg'"/>
+      </div>
+      <div class="usine-card-body">
+        <h3>${usine.nom}</h3>
+        <p class="usine-location">${usine.localisation || '—'}</p>
+        <p class="usine-desc">${usine.description || ''}</p>
+        <div class="usine-meta">
+          <span>${nbChaines} chaîne${nbChaines > 1 ? 's' : ''}</span>
+          <button class="status-btn status-${usine.statut}" data-id="${usine.id}" data-statut="${usine.statut}">
+            ${labelStatut(usine.statut)}
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Clic sur la carte → naviguer vers les chaînes
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('status-btn')) return;
+      window.setUsineContext(usine.id, usine.nom);
+      window.location.href = 'chaines.html';
+    });
+
+    // Bouton statut → cycle 3 états
+    card.querySelector('.status-btn').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      const next = nextStatut(btn.dataset.statut);
+      const { error } = await sb.from('usines').update({ statut: next }).eq('id', usine.id);
+      if (!error) {
+        btn.dataset.statut = next;
+        btn.className = `status-btn status-${next}`;
+        btn.textContent = labelStatut(next);
+        usine.statut = next;
+      }
+    });
+
+    return card;
   }
 
-  container.innerHTML = usines.map(usine => {
-    const status = String(usine.status || "active").toLowerCase();
-    const meta = statusMeta[status] || statusMeta.active;
-    const image = window.IMMS.publicUrl(usine.image_url) || "factory.svg";
-    return `
-      <div class="usine-card">
-        <div class="usine-image">
-          <img src="${image}" alt="${window.IMMS.escapeHtml(usine.name)}">
-        </div>
-        <div class="usine-content">
-          <div class="usine-header">
-            <h2>${window.IMMS.escapeHtml(usine.name)}</h2>
-            <button class="status-pill" style="--status:${meta.color}" onclick="changeUsineStatus('${usine.id}', '${status}')">${meta.label}</button>
-          </div>
-          <div class="usine-info-grid">
-            <div class="usine-info"><span class="info-label">Ville</span><p>${window.IMMS.escapeHtml(usine.city || "N/A")}</p></div>
-            <div class="usine-info"><span class="info-label">Responsable</span><p>${window.IMMS.escapeHtml(usine.responsable || "N/A")}</p></div>
-            <div class="usine-info"><span class="info-label">Secteur</span><p>${window.IMMS.escapeHtml(usine.sector || "N/A")}</p></div>
-            <div class="usine-info"><span class="info-label">Creation</span><p>${window.IMMS.escapeHtml(usine.creation_date || "N/A")}</p></div>
-          </div>
-        </div>
-        <div class="usine-side">
-          <div class="chaine-count"><h1>${usine.chaines?.length || 0}</h1><span>Chaines</span></div>
-          <button class="open-usine-btn" onclick="openUsine('${usine.id}')">Ouvrir</button>
-        </div>
-      </div>`;
-  }).join("");
-}
-
-async function changeUsineStatus(usineId, currentStatus) {
-  const statuses = ["active", "maintenance", "inactive"];
-  const nextStatus = statuses[(statuses.indexOf(currentStatus) + 1) % statuses.length];
-  const sb = await window.IMMS.getClient();
-  const { error } = await sb.from("usines").update({ status: nextStatus }).eq("id", usineId);
-  if (error) return window.IMMS.notify(error.message, "error");
-  loadUsines();
-}
-
-function openUsine(usineId) {
-  window.IMMS.setContext("selectedUsine", usineId);
-  window.location.href = "chaines.html";
-}
-
-document.addEventListener("DOMContentLoaded", loadUsines);
+  function labelStatut(s) {
+    return s === 'active' ? '✅ Active' : s === 'maintenance' ? '🔧 Maintenance' : '⛔ Inactive';
+  }
+  function nextStatut(s) {
+    return s === 'active' ? 'maintenance' : s === 'maintenance' ? 'inactive' : 'active';
+  }
+});
