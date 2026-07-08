@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await loadFactories();
   setupImageDropZone("imageDropZone", "MachineImage", "imageLabel");
-  document.getElementById("UsineMachine")?.addEventListener("change", e => loadChaines(e.target.value));
+  document.getElementById("UsineMachine")?.addEventListener("change", e => {
+    const usineId = e.target.value;
+    loadChaines(usineId);
+    window.IMMS.setContext("selectedUsine", usineId);
+  });
   document.querySelector(".add-machine-form").addEventListener("submit", addMachine);
 });
 
@@ -10,6 +14,7 @@ function setupImageDropZone(zoneId, inputId, labelId) {
   const fileInput = document.getElementById(inputId);
   const label = document.getElementById(labelId);
   if (!dropZone || !fileInput || !label) return;
+  
   dropZone.addEventListener("click", () => fileInput.click());
   dropZone.addEventListener("dragover", e => {
     e.preventDefault();
@@ -21,11 +26,13 @@ function setupImageDropZone(zoneId, inputId, labelId) {
     dropZone.classList.remove("is-dragover");
     if (e.dataTransfer.files.length) {
       fileInput.files = e.dataTransfer.files;
-      label.textContent = e.dataTransfer.files[0].name;
+      label.textContent = "📁 " + e.dataTransfer.files[0].name;
     }
   });
   fileInput.addEventListener("change", e => {
-    label.textContent = e.target.files[0]?.name || "Click to upload or drag and drop";
+    label.textContent = e.target.files[0]?.name 
+      ? "📁 " + e.target.files[0].name 
+      : "📁 Click to upload or drag and drop";
   });
 }
 
@@ -42,14 +49,9 @@ async function loadFactories() {
 }
 
 async function loadChaines(usineId) {
-  let select = document.getElementById("MachineChaine");
-  if (!select) {
-    const group = document.createElement("div");
-    group.className = "form-group-addMachine";
-    group.innerHTML = '<label>Production line</label><select id="MachineChaine"><option value="">Select a production line</option></select>';
-    document.querySelector(".form-grid-addMachine").appendChild(group);
-    select = document.getElementById("MachineChaine");
-  }
+  const select = document.getElementById("MachineChaine");
+  if (!select) return;
+  select.innerHTML = '<option value="">Select a production line</option>';
   if (!usineId) return;
   const sb = await window.IMMS.getClient();
   const { chaineId } = window.IMMS.getContext();
@@ -72,11 +74,21 @@ async function uploadImage(sb, file) {
 async function addMachine(e) {
   e.preventDefault();
   const sb = await window.IMMS.getClient();
+  const btn = e.target.querySelector("button[type=submit]");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-spinner"></span> Adding...';
+  
   try {
     const usine_id = document.getElementById("UsineMachine").value;
-    const chaine_id = document.getElementById("MachineChaine")?.value || window.IMMS.getContext().chaineId;
+    const chaine_id = document.getElementById("MachineChaine")?.value;
+    const name = document.getElementById("MachineName").value.trim();
+    
+    if (!name || !usine_id || !chaine_id) {
+      throw new Error("Machine name, factory and production line are required.");
+    }
+    
     const payload = {
-      name: document.getElementById("MachineName").value.trim(),
+      name,
       usine_id,
       chaine_id,
       type: document.getElementById("MachineType").value.trim(),
@@ -85,13 +97,17 @@ async function addMachine(e) {
       image_url: await uploadImage(sb, document.getElementById("MachineImage").files[0]),
       status: "running"
     };
-    if (!payload.name || !payload.usine_id || !payload.chaine_id) throw new Error("Machine name, factory and production line are required.");
+    
     const { error } = await sb.from("machines").insert(payload);
     if (error) throw error;
+    
     window.IMMS.setContext("selectedUsine", usine_id);
     window.IMMS.setContext("selectedChaine", chaine_id);
-    window.location.href = "machines.html";
+    window.IMMS.notify("Machine added successfully!", "success");
+    setTimeout(() => { window.location.href = "machines.html"; }, 800);
   } catch (error) {
     window.IMMS.notify(error.message, "error");
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg> Add Machine';
   }
 }

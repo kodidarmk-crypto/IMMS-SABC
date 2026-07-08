@@ -1,0 +1,259 @@
+IMMS est un app Web pour le Industrial Maintenance Management System 
+Il est diviser en 3 sections
+section A: Authentication 
+Quand j'ouvre le site 
+Je tombe sur la page main.html qui explique l'utilité d'une Gmao, elle contient 2 pages Annexes, contact.html (pour afficher les contacts) et index.html.
+Dans index.html qui est comme un login page, l'utilisateur entre son e-mail et son Password et coche la box des terms and conditions
+Mais la page index.html contient aussi des annexes, tel que
+1. Signup.html - ici la page demande juste à l'utilisateur de voir un administrateur pour créer un compte 
+2. Terms.html - ici est affichée les terms de confidentialité 
+3. Forgotpassword.html - ici l'utilisateur entre son E-mail et reçoit un lien via mail pour changer son mot de passe, le lien là c'est changePassword.html où il entre et confirm son New password
+
+Ça c'est tout pour la section A, 
+Maintenant la section B
+Il y a 4 rôles, intern, opérateur, mécanicien et administrateur 
+Si la personne qui login et qu'il est intern ou opérateur, une page s'ouvre 
+Dashboard-op.html, cette page affiche un calendrier des opérations qu'il a faire durant la semaine ou le mois, bref il pourra trier les opérations et cocher ceux qui sont terminé, bref juste comme un agenda
+Et il a 2 pages annexes 
+Contact.html pour afficher les contacts
+Et profile.html, ici il pourra modifier ces informations 
+Nom et autres
+Upload un profile image 
+Change son password et logout
+Si la personne qui login est un mécanicien ou administrateur, la page usine.html s'ouvre 
+Cette page affiche la liste des usines 
+Elle affiche une image de l'usine et ces characteristics et nombres de chaînes, elle contient des pages annexes tel que Ajouterusine.html  pour pouvoir ajouter une usine, profile.html pour modifier ces informations, contact.html, 
+Quand il click sur une usine 
+La page chaînes.html s'ouvre, elle affiche la liste des chaînes de production et services d'une usine spécifique, elle contient des pages annexes. AjouterChaines.html pour ajouter une chaîne dans une usine, profile.html et contact.html 
+NB: c'est annexes sont principalement dans un top bar
+Quand il clique sur une chaîne, il a la liste complète des machines de la chaîne spécifique, pour chaque machine il y a son image et ses characteristics, et un statut qui change de couleur dépendant de l'état de la machine 
+La page contient quelques page annexes tel que addMachine.html
+Pour ajouter une machine, profile.html, contact.html et member.html qui affiche la liste des membres responsables de la chaîne, elle même aussi contient une pages annexes addMember.html, cette page est utilisée pour ajouter un membre dans le système et choisir son rôle, 
+Je pense que c'est tout pour la section B
+La section C
+Quand tu cliques sur une machine, la page
+GMAO.html s'ouvre avec les informations spécifiques de cette machine, c'est le cœur même de notre IMMS, elle contient ;
+1. Une div qui affiche les informations de la machine ( image, usine, chaîne, manufacturer, et un button statut, soit actif, en maintenance ou HS)
+2. Une div qui contient une alert pannel, elle affiche les interventions non réalisée de la machine 
+3. Une div pour weekly interventions qui affiche les interventions de maintenance ou autre à faire sur la machine 
+4. Une div qui affiche l'équipe en charge de la machine avec un bouton add intern pour choisir un membre et l'ajouter 
+5. Une div qui affiche les éléments de la machine, par exemple un soutireuse contient beaucoup de composants 
+Avec un button add éléments qui ajoute un nouveau composants 
+La page gmao.html contient aussi des pages Annexes tel que 
+1. Machines pour revenir sur la liste des machines 
+2. Membres pour afficher la listes des membres responsables d'une chaîne 
+3. Interventions.html qui contient aussi des divs, une pour le calendrier des opérations d’une machine, une alerte pannel, et un liste des up comming maintenance tasks
+Et une page Annexes addinterventions
+4. Pannes.html qui contient plusieurs div, Failures history, add Failures, maintenance kpi(mttr, mtbf, availability et autre), unresolved Failures, Failures type, critical components
+5. Documents.html c'est comme une bibliothèque qui affiche tout les documents d'une machine, schéma de câblage et autre, elle a aussi une page Annexes, add documents
+6. Stocks.html pour la gestion des stocks avec des divs tel que, inventory management, add part, inventory kpi, low Stocks alerts, catégories
+Et enfin
+7. Analysis.html
+Cette page sert à analyser la machine grâce à des indicateurs tel que l’amdec et le diagramme de pareto 
+Pour analyser et mesurer l'efficacité de la machine
+
+voici les operations d'amelioration a apporter
+
+
+1. dans la page contacts.html, ajouter un contact.svg dans 
+    <!-- LEFT — même illustration -->
+      <div class="card__left-contact">
+        <img src="logistics.svg" alt="illustration" style="width:100%; max-width:380px;"/>
+      </div>
+  donc retire le logistics.svg pour mettre un bons contact.svg
+2. dans la page signup.html, ajouter un signup.svg dans
+    <!-- LEFT — même illustration -->
+      <div class="card__left-signup">
+        <img src="logistics.svg" alt="illustration" style="width:100%; max-width:380px;"/>
+      </div>
+donc retire le logistics.svg pour mettre un bons signup.svg
+3. dans la page change-password.html, ajouter un change-password.svg dans
+    <!-- LEFT — illustration zone -->
+      <div class="card__left-chpw">
+        <img src="factory.svg" alt="illustration" style="width:100%; max-width:380px;"/>
+      </div>
+      et verifie le fonctionnement de forgot-password.js et change-password.js car forgot-password envoie le lien de change password, et connect le au service auth de supabase pour que les messages sont envoyé automatiquement
+donc retire le factory.svg pour mettre un bons changePassword.svg
+verifie bien le fonctionnement de cette page
+4. dans la page addMachine.html, 
+  modifier et ajuster la couleur des text
+  modifier le button add addMachine
+  dans factory, ça doit fetch et afficher la liste des usines et arrange le format du box
+  arranger le button choisir un fichier dans machine image
+  dans addMachine.js, arrange le code pour qu'il marche bien et se connect/ajoute a la base de données supabase et evite le local storage
+  et dés que j'ajoute une machine ça me ramene dans machines.html
+
+5. dans la page addMember.html,
+  dans factory, ça doit fetch et afficher la liste des usines et arrange le format du box
+  dans production lines, ça doit fetch et afficher la liste des chaines de l'usine qu'il a choisi, et il peut choisir plusieurs chaines dans une usines et arrange le format du box
+  pour role arrange le format du box
+  et dés que j'ajoute un membre ça me ramene dans member.html
+  dans addMember.js, arrange le code pour qu'il marche bien et se connect/ajoute a la base de données supabase et evite le local storage
+
+6. dans la page ajouterChaine.html,
+  dans factory, ça doit fetch et afficher la liste des usines et arrange le format du box
+  dans status, arrange le format du box et mets une variance de couleur pour chaque statut, active, maintenance et inactive
+  et dés que j'ajoute une chaine ça me ramene dans chaines.html
+  dans ajouterChaine.js, arrange le code pour qu'il marche bien et se connect/ajoute a la base de données supabase et evite le local storage
+
+7. dans la page ajouterUsine.html
+  arranger le button choisir un fichier dans factory Image
+  et dés que j'ajoute une Usine ça me ramene dans Usines.html
+  dans ajouterUsine.js, arrange le code pour qu'il marche bien et se connect/ajoute a la base de données supabase et evite le local storage
+
+8. dans la page chaines.html
+ sur le header (topbar) modifie le SVG de profile, contact et production line pour que ça soit distingue
+ dans chaines.js, arrange le code pour qu'il marche bien et se connect/ajoute a la base de données supabase et evite le local storage
+ aussi, rend le titre en statut a 3 volets, c'est a dire active, maintenance ou inactive, donc quand j'appuie sur le bouton son statut se modifie en fonction des couleurs
+
+9. dans la page dashboard-op.html
+  dans son fichier js, dashboard-op.js, arrange:crée le code dans cette div
+  <div class="dash-calender">
+
+    </div>
+  pour afficher les operations de maintenance et intervention programmer pour une semaine
+  cette page est dedier au intern et operatuer, 
+  donc ça affiche les operation de la semaine avec un check box si il a été fait ou pas,
+  d'une chaine (donc si l'intern ou operateur travail sur plusieurs chaine, ça affiche les operations des chaines dont il a été dedier)
+  tu dois aussi créer le code css dans (dashboard page style) et tu arranges son @media pour bien afficher son calendrier 
+
+10. dans la page machines.html,
+  dans le top bar (header) modifie les svg de factory, contact, member, profile, et add machine
+  les images des machines doivent se trouver dans la base de données
+  aussi, rend le titre en statut a 3 volets, c'est a dire Running, maintenance ou inactive, donc quand j'appuie sur le bouton son statut se modifie en fonction des couleurs
+  dans machines.js modifie le code pour qu'il prend les informations dans la base de données supabase, donc memes les images doivent etre importé depuis la base
+
+11. dans  la page member.html
+  dans le top bar (header) modifie les svg de factory, contact, profile et add member
+  <!-- Member management content goes here -->
+                <div class="member-page"></div>
+  dans member.js arrange le code pour qu'il lise dans la base des données
+  et ça affiche les informations des membres, Nom, email, contact, son statut (intern et autres) 
+  ajoute aussi un bouton delete pour retirer ce membre n'importe quand
+  et dans la liste des membres, ça doit ouvrire la liste des membres d'une chaine specifique pas de toute l'usine
+  toute ces modifications sont a faire dans member.js
+
+12. dans la page profile.html
+dans,
+<div class="profile-user-info">
+    <div class="profile-user-name" id="profileUserName">Administrator</div>
+    <div class="profile-user-role" id="profileUserRole">Admin — SABC GMAO</div>
+ </div>
+ au lieu d'afficher administrator et admin, 
+ ça fetch le role et ça affiche son role intern, operateur, administrateur ou mecanicien
+ arrange le code de profile.js pour qu'un utilisateur puisse modifier ces informations
+
+13. dans la page Usines.html,
+  dans le header, modifie les svg de contacts, profile et add factory
+  aussi, rend le titre en statut a 3 volets, c'est a dire active, maintenance ou inactive, donc quand j'appuie sur le bouton son statut se modifie en fonction des couleurs
+  dans usines.js ajoute le code pour qu'il lise la base de données des listes d'usines dans supabase
+
+14. dans la page adddocuments.html,
+  ajoute un svg dans 
+  <div class="card_adddocuments_left">
+     <img src="image002.png" alt="Add Document" />
+  </div> correspondant a un ajout de Document
+  au lieu d'afficher une image
+  dans adddocuments.js ajoute le code pour qu'il puisse ajouter un document dans la base de donnée supabase et quand ça ajoute, ça rentre dans documents.html
+
+15. dans la page addIntervention.html,
+  ajoute un svg dans 
+  <div class="card_addintervention_left">
+     <img src="image002.png" alt="Add Intervention" />
+  </div> correspondant a un ajout d'intervention
+  au lieu d'afficher une image
+  dans addIntervention.js ajoute le code pour qu'il puisse ajouter une Intervention dans la base de donnée supabase et quand ça ajoute, ça rentre dans interventions.html
+  aussi, cette intervention est pour une machine specifique donc le Machine id doit etre fetch tu vois un peu
+
+16. dans la page analysis.html,
+  son amdec est bons
+  dans analysis.js, connect le a la base de donnée supabase pour afficher l'amdec d'une machine spécifique
+  et evite le local storage
+
+17. dans la page documents.html, 
+  modifie les sgv de usines & add documents dans le topbar (header) pour qu'il ressemble a sa description
+  dans documents.js arrange le code pour qu'il puisse se connecter et fetch les documents d'une machine specifique
+
+18. dans la page gmao.html,
+ modifie les sgv de machine, member & intervention dans le topbar (header) pour qu'il ressemble a sa description
+ dans gmao.js arrange le code pour qu'il puisse se connecter et lire la base de donnée supabase et afficher les informations necessaires d'une machine specifique d'une machine
+
+19. dans la page interventions.html,
+  modifie les svg de usines et add intervention dans le topbar (header) pour qu'il ressemble a sa description
+  dans interventions calendar, le sort by doit etre plus explicite, donc si je dis sort by type, ça doit uniquement afficher les operations du genre predictive,.... et autres tu vois un peu
+  et modifie la disposition des cartes, tu mets interventions calendar a gauche, schedule operation au centre et overdue operations a droite et en dessous du overdue operations, tu crées un intervention KPI
+  dans schedule operation et overdue operation, tu mets un button export to pdf, pour les 2 aussi, tu mets un sort by, type, occurence, ascending, discending
+  quand je clique sur une date dans intervention calendar, les interventions prevu pour cette date s'ouvre dans schedule operation
+  dans interventions.js, arrange le code pour qu'il respecte les criteres du frontend en html et se connect a la base de données supabase et affiche les operations d'une machine specifique
+  arrange aussi son @media pour un meilleur rendu mobile. 
+
+20. dans la page Management.html,
+  modifie les sgv de usines dans le topbar (header) pour qu'il ressemble a une usine
+  arrange les @media de la page pour une meilleur rendu mobile
+  dans la carte inventory management, ajoute un scroll bar apres plus de 5 stocks
+  dans la meme carte, dans le sort by quand je sort by category, il doit avoir une fonction all, pour que je puisse voir les stocks, soit je vois uniquement  soit ceux mecanique,
+  hydraulique, electrique, pneumatique, safety, software ou all, ajoute aussi un sort by pour le statut des stocks,
+  NB; je pourrais export to pdf des sort specifique
+  dans la meme carte, le statut des stocks doivent aussi se modifier automatiquement pour voir si il est critique, normal ou autre 
+  dans management.js, arrange le code pour qu'il se connecte a la base de donnée supabase et laisse le local storage, et pour qu'il se concorde avec le frontend html proposer
+  dans la carte add part, dans Linked Machine, le Machine ID s'affiche automatiquement
+
+21. dans la page pannes.html,
+  modifie les sgv de usines dans le topbar (header) pour qu'il ressemble a une usine
+  arrange les @media de la page pour une meilleur rendu mobile meme le @media du top bar
+  dans la carte failure history, ajoute un scroll bar apres plus de 5 pannes
+  rend le status en bouton, soit c'est resolved soit c'est unresolved, c'est l'utilisateur qui defini si il a été resolu, et si il n'a pas été resolu, il s'affiche directement dans les interventions non realiser donc 
+  il s'affiche dans les alerts pannels et s'affiche aussi dans interventions.html dans son alert pannel et schedule operation de sa journée
+  ça veut dire avant quand il est enregistré, il n'est pas obligé d'etre terminer, et en meme temps son temps d'intervention peut etre mesurer jusqu'a ce qu'il est reparer
+  donc son duration ne s'arrete pas tant qu'il n'est pas resolved,
+  aussi dans la meme carte ont va sort by resolved, unresolved or all, donc soit ça affiche tout, les resolus ou les non resolu
+  donc le maintenance kpi se mets automatiquement a jour
+  dans la carte add failure, dans le choix du component, ça fait affiche la liste des composants de la machine, 
+  comme ça, cette pannes peut etre automatiquement enregistré dans l'amdec de analysis.html
+  la carte Unresolved Failures, affiche les pannes non resolu de la machine et fetch aussi les interventions non realisé de la machine pour afficher la-bas
+  donc si non resolu, son duration time continu de tourner jusqu'a ce qu'il soit resolu
+  dans la meme carte au niveau de statut, ou c'est critique, mets plus tot un bouton pour indiquer si il a ete resolu ou pas, resolu en vert, non resolu en rouge
+
+une fois toute ces operations d'amelioration terminer, 
+tu connectes tout a ma base de donnée supabase, voici mes keys;
+Project Url: https://afujoysgsoluozufbbrg.supabase.co
+Publishable key: sb_publishable_Jy814jkIkXUAEAOhpmzFoA_MuxNhAsM
+anon public key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmdWpveXNnc29sdW96dWZiYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDc3NzksImV4cCI6MjA5NTYyMzc3OX0.K6RV1fZu5YDR8Zl3A8ETVyeE5OQ63xPLpG6qeJl5GBI
+Direction Connection String: postgresql://postgres:[YOUR-PASSWORD]@db.afujoysgsoluozufbbrg.supabase.co:5432/postgres
+CLI setup commands: supabase login
+supabase init
+supabase link --project-ref afujoysgsoluozufbbrg
+
+JWT keys
+key ID: 0b3412fb-277f-4519-9d1f-7fe904db1f94
+Discovery URL: https://afujoysgsoluozufbbrg.supabase.co/auth/v1/.well-known/jwks.json
+Public key set (JSON Web Key Set format)
+{
+  "keys": [
+    {
+      "x": "wMtqIJFmgDnA0c5FdAltJpj0HYA5GY-T4qJmZ_3w0Y8",
+      "y": "MwOBcoZ7syhSFqKCzMNxeNJ9mw_nbMnszddqsv79LTg",
+      "alg": "ES256",
+      "crv": "P-256",
+      "ext": true,
+      "kid": "0b3412fb-277f-4519-9d1f-7fe904db1f94",
+      "kty": "EC",
+      "key_ops": [
+        "verify"
+      ]
+    }
+  ]
+}
+Legacy JWT secret (still used): tB7ZYWLZ2KSpXUrxZ+v68B7CNPajwkQY4rE/v8WeUYTZnqPt2holSwd1+vzrX6yJKv1uEyewYw55ZcEwKTowtw==
+
+tu vas creer les tables necessaires, et les connecter automatiquement
+
+une fois terminer, upload le dans dans ce github repository ci dessous
+https://github.com/kodidarmk-crypto/IMMS-SABC.git
+
+une fois terminer, je vais connecter cette repository a vercel pour obtenir un link 
+et ont fera les testes
+je pense que c'est tout ce qu'il y a à faire pour terminer cette IMMS, 
+une fois terminer je vais faire des test
+
+a la fin du projet tu vas me proposer des perspectives, mais ce projet doit etre terminer Maintenant

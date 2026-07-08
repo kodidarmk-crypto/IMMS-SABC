@@ -1,91 +1,108 @@
 // ============================================================
 //  IMMS-SABC — usines.js
-//  Affiche la liste des usines, gère le statut et la navigation
+//  Colonnes BDD : name, status, city, image_url
+//  Container HTML : div.usines-page
 // ============================================================
 
 document.addEventListener('supabase:ready', async () => {
   const sb = window._supabase;
 
-  // Vérifie session
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = 'login.html'; return; }
 
-  const grid = document.getElementById('usinesGrid') || document.querySelector('.usines-grid');
-  if (!grid) return;
+  const container = document.querySelector('.usines-page');
+  if (!container) return;
+
+  let allUsines    = [];
+  let activeFilter = 'all';
 
   await loadUsines();
 
-  async function loadUsines() {
-    grid.innerHTML = '<p class="loading-text">Chargement des usines…</p>';
+  // Filtres status si présents dans le HTML
+  window.filterByStatus = function(status) {
+    activeFilter = status;
+    renderUsines();
+  };
 
-    const { data: usines, error } = await sb
+  async function loadUsines() {
+    container.innerHTML = '<p style="padding:20px;opacity:.6;">Chargement des usines…</p>';
+    const { data, error } = await sb
       .from('usines')
-      .select('*, chaines(count)')
-      .order('nom');
+      .select('*')
+      .order('name');
 
     if (error) {
-      grid.innerHTML = `<p class="error-text">Erreur : ${error.message}</p>`;
+      container.innerHTML = `<p style="color:#e74c3c;padding:20px;">Erreur : ${error.message}</p>`;
       return;
     }
-    if (!usines || usines.length === 0) {
-      grid.innerHTML = '<p class="empty-text">Aucune usine enregistrée.</p>';
-      return;
-    }
-
-    grid.innerHTML = '';
-    usines.forEach(usine => grid.appendChild(buildCard(usine)));
+    allUsines = data || [];
+    renderUsines();
   }
 
-  function buildCard(usine) {
-    const nbChaines = usine.chaines?.[0]?.count ?? 0;
+  function renderUsines() {
+    const list = activeFilter === 'all'
+      ? allUsines
+      : allUsines.filter(u => u.status === activeFilter);
+
+    if (list.length === 0) {
+      container.innerHTML = '<p style="padding:20px;opacity:.6;">Aucune usine enregistrée.</p>';
+      return;
+    }
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:10px 0;';
+    list.forEach(u => grid.appendChild(buildCard(u)));
+    container.appendChild(grid);
+  }
+
+  function buildCard(u) {
     const card = document.createElement('div');
     card.className = 'usine-card';
+    card.style.cssText = 'cursor:pointer;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;transition:transform .2s;';
     card.innerHTML = `
-      <div class="usine-card-img">
-        <img src="${usine.image_url || 'factory.svg'}" alt="${usine.nom}"
-             onerror="this.src='factory.svg'"/>
-      </div>
-      <div class="usine-card-body">
-        <h3>${usine.nom}</h3>
-        <p class="usine-location">${usine.localisation || '—'}</p>
-        <p class="usine-desc">${usine.description || ''}</p>
-        <div class="usine-meta">
-          <span>${nbChaines} chaîne${nbChaines > 1 ? 's' : ''}</span>
-          <button class="status-btn status-${usine.statut}" data-id="${usine.id}" data-statut="${usine.statut}">
-            ${labelStatut(usine.statut)}
+      <img src="${u.image_url || 'factory.svg'}" alt="${u.name}"
+           onerror="this.src='factory.svg'"
+           style="width:100%;height:160px;object-fit:cover;"/>
+      <div style="padding:16px;">
+        <h3 style="margin:0 0 4px;">${u.name}</h3>
+        <p style="margin:0 0 4px;opacity:.6;font-size:.83rem;">${u.city || ''}</p>
+        <p style="margin:0 0 4px;opacity:.6;font-size:.83rem;">${u.sector || ''}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+          <span style="opacity:.5;font-size:.8rem;">Resp: ${u.responsable || '—'}</span>
+          <button class="statut-btn" data-id="${u.id}" data-status="${u.status}"
+            style="padding:4px 14px;border-radius:20px;border:none;cursor:pointer;font-weight:600;
+                   background:${colorStatus(u.status)};color:#fff;font-size:.78rem;">
+            ${labelStatus(u.status)}
           </button>
         </div>
       </div>
     `;
 
-    // Clic sur la carte → naviguer vers les chaînes
+    // Clic carte → chaînes
     card.addEventListener('click', (e) => {
-      if (e.target.classList.contains('status-btn')) return;
-      window.setUsineContext(usine.id, usine.nom);
+      if (e.target.closest('.statut-btn')) return;
+      window.setUsineContext(u.id, u.name);
       window.location.href = 'chaines.html';
     });
 
-    // Bouton statut → cycle 3 états
-    card.querySelector('.status-btn').addEventListener('click', async (e) => {
+    // Bouton status → cycle 3 états
+    card.querySelector('.statut-btn').addEventListener('click', async (e) => {
       e.stopPropagation();
-      const btn = e.currentTarget;
-      const next = nextStatut(btn.dataset.statut);
-      const { error } = await sb.from('usines').update({ statut: next }).eq('id', usine.id);
+      const btn  = e.currentTarget;
+      const next = nextStatus(btn.dataset.status);
+      const { error } = await sb.from('usines').update({ status: next }).eq('id', u.id);
       if (!error) {
-        btn.dataset.statut = next;
-        btn.className = `status-btn status-${next}`;
-        btn.textContent = labelStatut(next);
-        usine.statut = next;
+        u.status             = next;
+        btn.dataset.status   = next;
+        btn.textContent      = labelStatus(next);
+        btn.style.background = colorStatus(next);
       }
     });
 
     return card;
   }
 
-  function labelStatut(s) {
-    return s === 'active' ? '✅ Active' : s === 'maintenance' ? '🔧 Maintenance' : '⛔ Inactive';
-  }
-  function nextStatut(s) {
-    return s === 'active' ? 'maintenance' : s === 'maintenance' ? 'inactive' : 'active';
-  }
+  function labelStatus(s) { return s==='active'?'✅ Active':s==='maintenance'?'🔧 Maintenance':'⛔ Inactive'; }
+  function colorStatus(s) { return s==='active'?'#27ae60':s==='maintenance'?'#f39c12':'#e74c3c'; }
+  function nextStatus(s)  { return s==='active'?'maintenance':s==='maintenance'?'inactive':'active'; }
 });

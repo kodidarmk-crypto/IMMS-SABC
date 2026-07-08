@@ -1,93 +1,141 @@
-document.addEventListener("DOMContentLoaded", loadDashboard);
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadWeeklySchedule();
+});
 
-async function loadDashboard() {
-  const calendar = document.querySelector(".dash-calender");
+async function loadWeeklySchedule() {
   const sb = await window.IMMS.getClient();
-  const { data: { user } } = await sb.auth.getUser();
+  const { data: { user } } = await sb.auth.getSession();
   if (!user) {
-    window.location.href = "login.html";
+    document.querySelector(".dash-calender").innerHTML = '<div class="empty-state">Please log in to view your schedule.</div>';
     return;
   }
 
-  const { data: memberships, error } = await sb
-    .from("chaine_members")
-    .select("chaine_id, chaines(name)")
-    .eq("profile_id", user.id);
-  if (error) {
-    calendar.innerHTML = `<p class="empty-state">${window.IMMS.escapeHtml(error.message)}</p>`;
+  // Get user's profile and chaine memberships
+  const { data: profile } = await sb.from("profiles").select("id, role").eq("id", user.id).single();
+  if (!profile) return;
+
+  // Get chaine memberships for this user
+  const { data: memberships } = await sb.from("chaine_members").select("chaine_id").eq("profile_id", user.id);
+  const chaineIds = memberships?.map(m => m.chaine_id) || [];
+
+  if (chaineIds.length === 0) {
+    document.querySelector(".dash-calender").innerHTML = '<div class="empty-state">You are not assigned to any production line.</div>';
     return;
   }
 
-  const chaineIds = (memberships || []).map(row => row.chaine_id);
-  if (!chaineIds.length) {
-    calendar.innerHTML = '<p class="empty-state">No production line assigned to this account.</p>';
-    return;
-  }
+  // Get interventions for the current week
+  const today = new Date();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+  startOfWeek.setHours(0, 0, 0, 0);
+  
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
 
-  const monday = startOfWeek(new Date());
-  const sunday = new Date(monday);
-  sunday.setDate(sunday.getDate() + 7);
-  const { data: interventions, error: intError } = await sb
+  const { data: interventions } = await sb
     .from("interventions")
-    .select("*, machines(name)")
+    .select("id, title, type, scheduled_at, status, description, machine_id, chaine_id")
     .in("chaine_id", chaineIds)
-    .gte("scheduled_at", monday.toISOString())
-    .lt("scheduled_at", sunday.toISOString())
+    .gte("scheduled_at", startOfWeek.toISOString())
+    .lte("scheduled_at", endOfWeek.toISOString())
     .order("scheduled_at");
 
-  if (intError) {
-    calendar.innerHTML = `<p class="empty-state">${window.IMMS.escapeHtml(intError.message)}</p>`;
-    return;
+  // Also get unresolved failures for these chaines
+  const { data: machines } = await sb.from("machines").select("id, name").in("chaine_id", chaineIds);
+  const machineIds = machines?.map(m => m.id) || [];
+  
+  let failures = [];
+  if (machineIds.length > 0) {
+    const { data: failureData } = await sb
+      .from("failures")
+      .select("id, title, type, started_at, status, machine_id")
+      .in("machine_id", machineIds)
+      .eq("status", "unresolved");
+    failures = failureData || [];
   }
 
-  renderWeek(calendar, monday, interventions || []);
+  renderCalendar(interventions || [], failures || [], startOfWeek, machines || []);
 }
 
-function startOfWeek(date) {
-  const d = new Date(date);
-  const day = d.getDay() || 7;
-  d.setDate(d.getDate() - day + 1);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
+function renderCalendar(interventions, failures, startOfWeek, machines) {
+  const container = document.querySelector(".dash-calender");
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  
+  const weekStart = new Date(startOfWeek);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
 
-function renderWeek(container, monday, rows) {
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(monday);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
+  const dateStr = `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" })} - ${weekEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
 
-  container.innerHTML = `
+  let html = `
     <div class="dash-week-header">
-      <h2>Weekly operations</h2>
-      <p>${days[0].toLocaleDateString()} - ${days[6].toLocaleDateString()}</p>
+      <h2>📅 Weekly Schedule</h2>
+      <p>${dateStr}</p>
     </div>
     <div class="dash-week-grid">
-      ${days.map(day => {
-        const iso = day.toISOString().slice(0, 10);
-        const tasks = rows.filter(row => row.scheduled_at?.slice(0, 10) === iso);
-        return `
-          <section class="dash-day">
-            <h3>${day.toLocaleDateString("en", { weekday: "short", day: "2-digit" })}</h3>
-            ${tasks.length ? tasks.map(task => `
-              <label class="dash-task">
-                <input type="checkbox" ${task.status === "done" ? "checked" : ""} onchange="toggleTask('${task.id}', this.checked)">
-                <span>
-                  <strong>${window.IMMS.escapeHtml(task.title)}</strong>
-                  <small>${window.IMMS.escapeHtml(task.machines?.name || task.type || "")}</small>
-                </span>
-              </label>`).join("") : '<p class="empty-state">No task</p>'}
-          </section>`;
-      }).join("")}
-    </div>`;
+  `;
+
+  days.forEach((day, index) => {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + index);
+    const dateStr2 = date.toISOString().split("T")[0];
+
+    const dayInterventions = interventions.filter(i => {
+      if (!i.scheduled_at) return false;
+      const iDate = new Date(i.scheduled_at).toISOString().split("T")[0];
+      return iDate === dateStr2;
+    });
+
+    const dayFailures = failures.filter(f => {
+      if (!f.started_at) return false;
+      const fDate = new Date(f.started_at).toISOString().split("T")[0];
+      return fDate === dateStr2;
+    });
+
+    html += `
+      <div class="dash-day">
+        <h3>${day}<br><small>${date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</small></h3>
+    `;
+
+    if (dayInterventions.length === 0 && dayFailures.length === 0) {
+      html += `<div style="font-size:0.7rem;color:var(--muted);padding:8px 0;">No tasks</div>`;
+    } else {
+      dayInterventions.forEach(interv => {
+        const machine = machines.find(m => m.id === interv.machine_id);
+        html += `
+          <label class="dash-task">
+            <input type="checkbox" ${interv.status === "done" ? "checked" : ""} onchange="toggleIntervention('${interv.id}', this.checked)">
+            <span>
+              <strong>${window.IMMS.escapeHtml(interv.title)}</strong>
+              <small>${machine ? window.IMMS.escapeHtml(machine.name) : ""} • ${interv.type}</small>
+            </span>
+          </label>
+        `;
+      });
+      dayFailures.forEach(f => {
+        html += `
+          <div class="dash-task" style="color:var(--red);">
+            <span>⚠️ <strong>${window.IMMS.escapeHtml(f.title)}</strong><small>Unresolved failure</small></span>
+          </div>
+        `;
+      });
+    }
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
 }
 
-async function toggleTask(id, done) {
+async function toggleIntervention(id, completed) {
   const sb = await window.IMMS.getClient();
-  const { error } = await sb
-    .from("interventions")
-    .update({ status: done ? "done" : "scheduled", completed_at: done ? new Date().toISOString() : null })
-    .eq("id", id);
-  if (error) window.IMMS.notify(error.message, "error");
+  const updates = {
+    status: completed ? "done" : "scheduled",
+    completed_at: completed ? new Date().toISOString() : null
+  };
+  const { error } = await sb.from("interventions").update(updates).eq("id", id);
+  if (error) return window.IMMS.notify(error.message, "error");
+  window.IMMS.notify(completed ? "Task completed!" : "Task reopened", "success");
 }

@@ -40,14 +40,14 @@ document.addEventListener('supabase:ready', async () => {
 
   async function loadChaines() {
     container.innerHTML = '<p style="padding:20px;opacity:.6;">Chargement des chaînes…</p>';
-    const { data, error } = await sb.from('chaines').select('*').eq('usine_id', usineId).order('nom');
+    const { data, error } = await sb.from('chaines').select('*').eq('usine_id', usineId).order('name');
     if (error) { container.innerHTML = `<p style="color:red;padding:20px;">${error.message}</p>`; return; }
     allChaines = data || [];
     renderChaines();
   }
 
   function renderChaines() {
-    const list = allChaines.filter(c => c.statut === activeFilter);
+    const list = allChaines.filter(c => c.status === activeFilter);
     if (list.length === 0) {
       container.innerHTML = `<p style="padding:20px;opacity:.6;">Aucune chaîne "${activeFilter}".</p>`; return;
     }
@@ -61,20 +61,20 @@ document.addEventListener('supabase:ready', async () => {
     card.style.cssText = 'cursor:pointer;padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;';
     card.innerHTML = `
       <div>
-        <h3 style="margin:0 0 6px;">${ch.nom}</h3>
-        <p style="margin:0;opacity:.7;font-size:.85rem;">${ch.description || 'Aucune description'}</p>
+        <h3 style="margin:0 0 6px;">${window.IMMS.escapeHtml(ch.name)}</h3>
+        <p style="margin:0;opacity:.7;font-size:.85rem;">${window.IMMS.escapeHtml(ch.responsable || 'Aucune description')}</p>
       </div>
-      <button class="statut-btn" data-id="${ch.id}" data-statut="${ch.statut}"
+      <button class="statut-btn" data-id="${ch.id}" data-status="${ch.status}"
         style="padding:5px 14px;border-radius:20px;border:none;cursor:pointer;font-weight:600;
-               background:${colorStatut(ch.statut)};color:#fff;font-size:.8rem;white-space:nowrap;">
-        ${labelStatut(ch.statut)}
+               background:${colorStatut(ch.status)};color:#fff;font-size:.8rem;white-space:nowrap;">
+        ${labelStatut(ch.status)}
       </button>
     `;
 
     // Clic carte → machines
     card.addEventListener('click', (e) => {
       if (e.target.closest('.statut-btn')) return;
-      window.setChaineContext(ch.id, ch.nom);
+      window.setChaineContext(ch.id, ch.name);
       window.location.href = 'machines.html';
     });
 
@@ -82,14 +82,13 @@ document.addEventListener('supabase:ready', async () => {
     card.querySelector('.statut-btn').addEventListener('click', async (e) => {
       e.stopPropagation();
       const btn  = e.currentTarget;
-      const next = nextStatut(btn.dataset.statut);
-      const { error } = await sb.from('chaines').update({ statut: next, updated_at: new Date() }).eq('id', ch.id);
+      const next = nextStatut(btn.dataset.status);
+      const { error } = await sb.from('chaines').update({ status: next, updated_at: new Date() }).eq('id', ch.id);
       if (!error) {
-        ch.statut            = next;
-        btn.dataset.statut   = next;
+        ch.status            = next;
+        btn.dataset.status   = next;
         btn.textContent      = labelStatut(next);
         btn.style.background = colorStatut(next);
-        // Re-render si le filtre actuel ne correspond plus
         if (next !== activeFilter) renderChaines();
       }
     });

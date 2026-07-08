@@ -1301,6 +1301,92 @@ body {
     .add-Machine-card{padding:25px;}
     .form-grid-addMachine{grid-template-columns:1fr; flex-direction: column;}
 }
+.select-styled {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 0.92rem;
+  font-family: var(--font-main);
+  background: var(--white);
+  transition: 0.25s;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8FA8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+.select-styled:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(192,57,43,0.08);
+}
+.file-drop-zone {
+  position: relative;
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-family: var(--font-main);
+}
+.file-drop-zone:hover {
+  border-color: var(--red);
+  background: var(--red-faint);
+}
+.file-drop-zone.is-dragover {
+  border-color: var(--red);
+  background: var(--red-faint);
+  transform: scale(1.02);
+}
+.file-drop-zone input[type="file"] {
+  display: none;
+}
+.form-group-addMachine select,
+.form-group-addMember select,
+.form-group-addChaine select,
+.form-group-addUsine select,
+.form-group-addChain select {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 0 16px;
+  font-size: 0.92rem;
+  font-family: var(--font-main);
+  background: var(--white);
+  transition: 0.25s;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A8FA8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+.form-group-addMachine select:focus,
+.form-group-addMember select:focus,
+.form-group-addChaine select:focus,
+.form-group-addUsine select:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(192,57,43,0.08);
+}
+.form-group-addMachine select[multiple] {
+  height: auto;
+  min-height: 100px;
+  background-image: none;
+  padding-right: 16px;
+}
 /*============= add machine page style finish =============*/
 
 /*========== add member page style start ==========*/
