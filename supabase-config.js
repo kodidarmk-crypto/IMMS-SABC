@@ -6,7 +6,7 @@
 const SUPABASE_URL = 'https://afujoysgsoluozufbbrg.supabase.co';
 
 // Publishable key (nouvelle clé Supabase 2025)
-const SUPABASE_KEY = 'sb_publishable_Jy814jkIkXUAEAOhpmzFoA_MuxNhAsM';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmdWpveXNnc29sdW96dWZiYnJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDc3NzksImV4cCI6MjA5NTYyMzc3OX0.K6RV1fZu5YDR8Zl3A8ETVyeE5OQ63xPLpG6qeJl5GBI';
 
 function initSupabase() {
   // Si le SDK est déjà chargé (ex: forgot-password.html le charge en dur)
